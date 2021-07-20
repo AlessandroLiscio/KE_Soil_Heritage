@@ -4,8 +4,10 @@
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ispra: <http://dati.isprambiente.it/ontology/core/#> .
 
-@prefix pr: <http://prova.attribute.ex/att#> .
+@prefix pr: <https://soilproject/temp#> .
 
 
 <#RegionsCSV>
@@ -18,12 +20,20 @@
 	rml:logicalSource <#RegionsCSV>;
 
   rr:subjectMap [
-    rr:template "https://lisciofortini/regions/{COD_REG}";
+    rr:template "https://soilproject/regions/{NOME_Regione}";
     rr:class pr:Place
   ];
 
   rr:predicateObjectMap [
     rr:predicate rdfs:label;
+    rr:objectMap [
+      rml:reference "COD_REG";
+      rr:datatype xsd:string
+    ]
+  ];
+  
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment;
     rr:objectMap [
       rml:reference "NOME_Regione";
       rr:datatype xsd:string
@@ -31,9 +41,9 @@
   ];
 
   rr:predicateObjectMap [
-    rr:predicate <https://lisciofortini/attribute/C1>;
+    rr:predicate foaf:primaryTopic;
     rr:objectMap [
-      rml:reference "C1";
-      rr:datatype xsd:string
+      rr:template "<http://dati.isprambiente.it/id/place/{NOME_Regione}>";
+      rr:datatype ispra:GeoFeature
     ]
   ].

@@ -6,8 +6,6 @@
 #
 click==8.0.1
     # via flask
-colorama==0.4.4
-    # via click
 decorator==5.0.9
     # via jsonpath-ng
 flask==1.0

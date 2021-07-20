@@ -24,7 +24,12 @@ necessary dependencies
 
 TODO
 
-- build a single KG 
+v- build a single KG 
+- add sosa-ssn ontology info
 - add year as attribute
 - create collection of attributes for each row
 - define units of measurement
+
+QUESTIONS:
+ - manual mapping of ALL csv columns?
+ - 

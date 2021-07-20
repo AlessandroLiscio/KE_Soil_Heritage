@@ -38,17 +38,77 @@ attributes_data = pd.read_csv(os.path.join('data', f'Descrizione_campi.csv'), se
 attributes_data = attributes_data[6:]
 
 for year in ['2012', '2015']:
+    for target in ['Regioni']:
+    # for target in ['Regioni', 'Province']:
+    # for target in ['Regioni', 'Province', 'Comuni']: # -> CAREFUL: 'Comuni' files are VERY big!
 
-    region_data = pd.read_csv(os.path.join('data', f'Regioni_{year}.csv'), sep=";")
+        print(f'Working on {target}_{year}.csv')
+        # Load Data
+        data = pd.read_csv(os.path.join('data', f'{target}_{year}.csv'), sep=";", encoding_errors='ignore')
 
-    for i, row in region_data.iterrows():
+        for i, row in data.iterrows():
 
-        region_code = row[0]
-        region_name = row[1]
-        region_name_refactored = region_name.replace(' ','-').lower()
+            # Store target code and name
+            if target == 'Regioni':
+                short = 'REG'
+                long = 'la regione'
+                code = row['COD_REG']
+                name = row['NOME_Regione']
+            elif target == 'Province':
+                short = 'PRO'
+                long = 'la provincia di'
+                code = row['COD_PRO']
+                name = row['NOME_Provincia']
+            else:
+                short = 'COM'
+                long = 'il comune di'
+                code = row['PRO_COM']
+                name = row['NOME_Comune']
+            name_refactored = name.replace(' ','-').lower()
 
-        final_graph.add(( 
-                    URIRef(PREFIX_REG_YEAR_COLLECTION + f"REG{region_code}_{year}"),
+
+            ###########################
+            # REGION-YEAR COLLECTIONS #
+            ###########################
+            # rdfs:label
+            g.add(( 
+                URIRef(PREFIX_REG_YEAR_COLLECTION + f"{short}{code}_{year}"),
+                URIRef(RDFS.label),
+                Literal(f"Consumo del suolo per {long} {name} nell'anno {year}")
+                ))
+            # rdfs:type
+            g.add(( 
+                URIRef(PREFIX_REG_YEAR_COLLECTION + f"{short}{code}_{year}"),
+                URIRef(RDF.type),
+                URIRef(PREFIX_ISPRA_CORE + "IndicatorCollection")
+                ))
+            # foaf:PrimaryTopic
+            g.add(( 
+                URIRef(PREFIX_REG_YEAR_COLLECTION + f"{short}{code}_{year}"),
+                URIRef(FOAF.PrimaryTopic),
+                URIRef(PREFIX_ISPRA_PLACES + name_refactored)
+                ))
+            # dc:date
+            g.add(( 
+                URIRef(PREFIX_REG_YEAR_COLLECTION + f"{short}{code}_{year}"),
+                URIRef(DC.date),
+                Literal(year)
+                ))
+            
+            for indicator in indicators_data['Campo_ID']:
+
+                # Avoid 'C7' indicator:
+                # - Regioni -> C7_RM_1956;C7_RM_1989;C7_RM_1998;C7_RM_2008;C7_RM_2013
+                # - Comuni e Province -> Does not exist
+                if indicator == 'C7': continue;
+
+                ##################################
+                # TARGET-YEAR-INDICATOR ENTITIES #
+                ##################################
+                # rdfs:label
+                g.add(( 
+                    URIRef(PREFIX_INDICATORS + f"{short}{code}_{year}_{indicator.lower()}"),
+>>>>>>> 48521f0 (typo fix)
                     URIRef(RDFS.label),
                     Literal("Consumo del suolo nella regione " + f"{region_name} nell'anno {year}")
         ))

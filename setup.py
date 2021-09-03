@@ -2,8 +2,9 @@ from setuptools import setup, find_packages
 
 install_requires=[
     'pandas',
-    'rdflib'
+    'rdflib',
+    'pyrml @ git+ssh://git@github.com/anuzzolese/pyrml.git'
 ]
 
-setup(name='KE_Soil_Heritage', version='1.0.0', packages=find_packages(),
-      install_requires=install_requires, dependency_links=['https://github.com/anuzzolese/pyrml/tarball/master'])
+setup(name='KE_Soil_Heritage', version='0.1.0', packages=find_packages(),
+      install_requires=install_requires)

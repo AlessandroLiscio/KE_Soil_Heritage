@@ -24,13 +24,13 @@ $> source c:\path\to\myenv\bin\activate
 An example of a possible python virtual environment for this project could be:
 
 ```
-$> python -m venv usr/bin/.kenv 
+python -m venv usr/bin/.kenv 
 ```
 
 To activate the environment:
 
 ```
-$> source /usr/bin/.kenv/bin/activate
+source /usr/bin/.kenv/bin/activate
 ```
 
 
@@ -50,11 +50,11 @@ github account needs to be enabled. You can find more about this [here](https://
 The project relies on Docker.
 To build the containers type the following command in the terminal having the root of the project as base folder:
 ```
-$> docker-compose build
+docker-compose build
 ```
 To run the containers type the following command in the terminal having the root of the project as base folder:
 ```
-$> docker-compose up
+docker-compose up
 ```
 
 ### Usage

@@ -30,7 +30,7 @@ $> python -m kenv usr/bin/kenv
 To activate the environment:
 
 ```
-$> source /usr/bin/keng/bin/activate
+$> source /usr/bin/kenv/bin/activate
 ```
 
 

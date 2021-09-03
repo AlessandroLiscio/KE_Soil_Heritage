@@ -43,7 +43,7 @@ pip install .
 ```
 
 WARNING: In order to correctly install the anuzzolese/pyrml package dependecy, a public SSH key for your
-github account needs to be enabled. You can find more about this [here] (https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account). 
+github account needs to be enabled. You can find more about this [here](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account). 
  
     
 ### Build and run

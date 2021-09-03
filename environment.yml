@@ -1,8 +1,0 @@
-name: keng
-channels:
-  - defaults
-dependencies:
-  - python=3.7.10  # Google Colab is on Python 3.7.10
-  - pip
-  - pip:
-    - pip-tools

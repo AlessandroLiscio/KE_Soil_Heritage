@@ -175,6 +175,7 @@ for year in ['2012', '2015']:
 # for s, p, o in final_graph:
 #     print(s, p, o)
 
+final_graph.serialize(destination='output.ttl', format='turtle')
 print("graph has {} statements.".format(len(final_graph)))
 
 # qres = final_graph.query(
@@ -207,5 +208,3 @@ print("graph has {} statements.".format(len(final_graph)))
 # for row in qres:
 #     print("%s %s %s" % row)
 # print("###################################")
-
-final_graph.serialize(destination='output.txt', format='turtle')

@@ -24,13 +24,13 @@ $> source c:\path\to\myenv\bin\activate
 An example of a possible python virtual environment for this project could be:
 
 ```
-$> python -m kenv usr/bin/kenv 
+$> python -m venv usr/bin/.kenv 
 ```
 
 To activate the environment:
 
 ```
-$> source /usr/bin/kenv/bin/activate
+$> source /usr/bin/.kenv/bin/activate
 ```
 
 

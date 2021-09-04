@@ -24,13 +24,13 @@ $> source c:\path\to\myenv\bin\activate
 An example of a possible python virtual environment for this project could be:
 
 ```
-$> python -m kenv usr/bin/kenv 
+python -m venv usr/bin/.kenv 
 ```
 
 To activate the environment:
 
 ```
-$> source /usr/bin/kenv/bin/activate
+source /usr/bin/.kenv/bin/activate
 ```
 
 
@@ -43,18 +43,18 @@ pip install .
 ```
 
 WARNING: In order to correctly install the anuzzolese/pyrml package dependecy, a public SSH key for your
-github account needs to be enabled. You can find more about this [here] (https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account). 
+github account needs to be enabled. You can find more about this [here](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account). 
  
     
 ### Build and run
 The project relies on Docker.
 To build the containers type the following command in the terminal having the root of the project as base folder:
 ```
-$> docker-compose build
+docker-compose build
 ```
 To run the containers type the following command in the terminal having the root of the project as base folder:
 ```
-$> docker-compose up
+docker-compose up
 ```
 
 ### Usage

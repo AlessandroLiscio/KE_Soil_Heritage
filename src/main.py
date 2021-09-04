@@ -18,10 +18,10 @@ rml_attribute_file_path = os.path.join('mappings', 'attribute-map.ttl')
 g = rml_converter.convert(rml_attribute_file_path)
 
 # Define useful prefixes
-PREFIX_ATTRIBUTES = "http://soilproject/id/skos/sc/"
-PREFIX_REG_YEAR_COLLECTION = "https://soilproject/id/collection/sc/"
-PREFIX_INDICATORS = "https://soilproject/id/indicator/sc/"
-PREFIX_TEMP = "https://soilproject/temp#"
+PREFIX_ATTRIBUTES = "http://soilproject.org/id/skos/sc/"
+PREFIX_REG_YEAR_COLLECTION = "https://soilproject.org/id/collection/sc/"
+PREFIX_INDICATORS = "https://soilproject.org/id/indicator/sc/"
+PREFIX_TEMP = "https://soilproject.org/temp#"
 
 PREFIX_ISPRA_CORE = "http://dati.isprambiente.it/ontology/core#"
 PREFIX_ISPRA_PLACES = "http://dati.isprambiente.it/id/place/"
@@ -151,11 +151,10 @@ g.serialize(destination='output.ttl', format='turtle')
 # ###########
 # # QUERIES #
 # ###########
-# qres = g.query(
-#     """SELECT ?name ?ha
-#         WHERE
-#             { ?place rdfs:label ?name ;
-#             <https://lisciofortini/attribute/C1> ?ha .}""")
+qres = g.query(
+    """SELECT ?s ?o
+        WHERE
+            { ?s rdfs:label ?o }""")
 # 
 # qres = g.query(
 #     """SELECT ?name ?d ?v
@@ -177,7 +176,7 @@ g.serialize(destination='output.ttl', format='turtle')
 #             ?id <http://prova.attribute.ex/att#descrizione> ?descr
 #         }""")
 #
-# print("###################################")
-# for row in qres:
-#     print("%s %s %s" % row)
-# print("###################################")
+print("###################################")
+for row in qres:
+    print("%s %s" % row)
+print("###################################")

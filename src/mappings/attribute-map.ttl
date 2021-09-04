@@ -8,7 +8,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
-@prefix pr: <http://prova.attribute.ex/att#> .
+@prefix soil: <http://soilproject.org/> .
 
 <#AttributesCSV>
   rml:source "./data/Descrizione_campi.csv" ;
@@ -20,9 +20,9 @@
   rml:logicalSource <#AttributesCSV>;
 
   rr:subjectMap [
-    rr:template "http://soilproject/id/skos/sc/{Campo_ID}";
+        rr:template "http://soilproject.org/id/skos/sc/{Campo_ID}";
     rr:class skos:Concept
-  ];
+      ];
 
   rr:predicateObjectMap [
     rr:predicate dc:identifier;

@@ -12,3 +12,5 @@ RUN cd LodView \
 FROM tomcat:8
 COPY --from=lodview /LodView/target/lodview.war /usr/local/tomcat/webapps/
 ADD http://downloads.visualdataweb.de/webvowl_1.1.7.war /usr/local/tomcat/webapps/webvowl.war
+
+EXPOSE 8080

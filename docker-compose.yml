@@ -1,21 +1,59 @@
-version: '2'
+# version: '2'
+# services:
+#   src:
+#     build: ./src
+#     volumes:
+#       - data-volume:/data/src
+#   virtuoso:
+#     build: ./virtuoso
+#     volumes:
+#       - data-volume:/data
+#     ports:
+#       - "8890:8890"
+#     environment:
+#       SPARQL_UPDATE: "true"
+#   lode:
+#     build: ./lode
+#     volumes:
+#       - data-volume:/data
+#     ports:
+#       - "9090:8080"
+#     depends_on:
+#       - "virtuoso"
+#   lodview:
+#     build: ./lodview
+#     volumes:
+#       - data-volume:/data
+#     ports:
+#       - "8080:8080"
+#
+# volumes:
+#   data-volume:
+
+version: '3'
 services:
-  main:
-    build: ./src
+  # src:
+  #   build: ./src
   virtuoso:
-    # image: tenforce/virtuoso:1.3.1-virtuoso7.2.2
-    # environment:
-    #   SPARQL_UPDATE: "true"
-    # volumes:
-    #   - ./data/virtuoso:/data
-    build: ./virtuoso
+    build: ./virtuoso 
+    environment:
+      SPARQL_UPDATE: "true"
+      # DEFAULT_GRAPH: "https://soilproject.org/"
+    volumes:
+      - ./virtuoso/graphs:/graphs
     ports:
       - "8890:8890"
-  lode:
-    build: ./lode
-    ports:
-      - "9090:8080"
-  lodview:
-    build: ./lodview
-    ports:
-      - "8080:8080"
+    #restart: always
+  # lode:
+  #   build: ./lode
+  #   ports:
+  #     - "9090:8080"
+  #   restart: always
+  #   depends_on:
+  #     - "virtuoso"
+  # lodview:
+  #   build: ./lodview
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - "virtuoso"

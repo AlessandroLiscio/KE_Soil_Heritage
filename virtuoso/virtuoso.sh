@@ -63,11 +63,35 @@ then
     kill $(ps aux | grep '[v]irtuoso-t' | awk '{print $2}')
 fi
 
+# if [ ! -f ".ontologies_loaded" -a -d "/usr/local/virtuoso-opensource/share/virtuoso/vad/ontologies/" ] ;
+# then
+#     pwd="dba" ;
+#     echo "Loading soilproject ontologies." ;
+#     echo "ld_dir_all('/usr/local/virtuoso-opensource/share/virtuoso/vad/ontologies/', '*.ttl', 'https://soilproject.org');" >> /load_ontologies.sql
+#     echo "rdf_loader_run();" >> /load_ontologies.sql
+#     echo "exec('checkpoint');" >> /load_ontologies.sql
+#     echo "WAIT_FOR_CHILDREN; " >> /load_ontologies.sql
+#     echo "$(cat /load_ontologies.sql)"
+#     virtuoso-t +wait && isql-v -U dba -P "$pwd" < /load_ontologies.sql
+#     kill $(ps aux | grep '[v]irtuoso-t' | awk '{print $2}')
+#     echo "`date +%Y-%m-%dT%H:%M:%S%:z`" > .ontologies_loaded
+# fi
+
+if [  -d "/ontologies" ]; then
+    echo "/ontologies exist, moving to /usr/local/virtuoso-opensource/share/virtuoso/vad"
+    mv /ontologies/* /usr/local/virtuoso-opensource/share/virtuoso/vad/ontologies/ 
+else
+	echo "/ontologies does not exist"
+fi
+
+# if [ -d "/usr/local/virtuoso-opensource/share/virtuoso/vad/ontologies" ];
 if [ ! -f ".ontologies_loaded" -a -d "/usr/local/virtuoso-opensource/share/virtuoso/vad/ontologies/" ] ;
 then
-	pwd="dba" ;
-	echo "Loading OntoPiA ontologies." ;
-	echo "ld_dir_all('/usr/local/virtuoso-opensource/share/virtuoso/vad/ontologies/', '*.ttl', 'https://w3id.org/italia/onto');" >> /load_ontologies.sql
+    pwd="dba" ;
+    echo "Loading soilproject ontologies." ;
+    echo "Files in /usr/local/virtuoso-opensource/share/virtuoso/vad/ontologies: ";
+    ls /usr/local/virtuoso-opensource/share/virtuoso/vad/ontologies
+    echo "ld_dir_all('/usr/local/virtuoso-opensource/share/virtuoso/vad/ontologies', '*.ttl', 'https://soilproject.org');" > /load_ontologies.sql
     echo "rdf_loader_run();" >> /load_ontologies.sql
     echo "exec('checkpoint');" >> /load_ontologies.sql
     echo "WAIT_FOR_CHILDREN; " >> /load_ontologies.sql
@@ -77,23 +101,6 @@ then
     echo "`date +%Y-%m-%dT%H:%M:%S%:z`" > .ontologies_loaded
 fi
 
-if [ ! -f ".vocabularies_loaded" -a -d "/usr/local/virtuoso-opensource/share/virtuoso/vad/vocabularies/" ] ;
-then
-	pwd="dba" ;
-	echo "Loading OntoPiA controlled vocabularies." ;
-	echo "ld_dir_all('/usr/local/virtuoso-opensource/share/virtuoso/vad/vocabularies/', '*.ttl', 'https://w3id.org/italia/controlled-vocabulary');" >> /load_vocabularies.sql
-    echo "rdf_loader_run();" >> /load_vocabularies.sql
-    echo "exec('checkpoint');" >> /load_vocabularies.sql
-    echo "WAIT_FOR_CHILDREN; " >> /load_vocabularies.sql
-    echo "$(cat /load_vocabularies.sql)"
-    virtuoso-t +wait && isql-v -U dba -P "$pwd" < /load_vocabularies.sql
-    kill $(ps aux | grep '[v]irtuoso-t' | awk '{print $2}')
-    echo "`date +%Y-%m-%dT%H:%M:%S%:z`" > .vocabularies_loaded
-fi
-
-
 crudini --set virtuoso.ini HTTPServer ServerPort ${VIRT_HTTPServer_ServerPort:-$original_port}
 
-# exec virtuoso-t +wait +foreground
-
-exec virtuoso-t +wait +configfile /virtuoso.ini
+exec virtuoso-t +wait +foreground

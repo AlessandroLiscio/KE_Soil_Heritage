@@ -52,7 +52,7 @@
 @prefix claros: <http://purl.org/NET/Claros/vocab#> .
 @prefix crm120111: <http://erlangen-crm.org/120111/> .
 @prefix rel: <http://purl.org/vocab/relationship/> .
-@prefix ita-ont: <https://w3id.org/italia/onto/> .
+@prefix soil: <http://soilproject.org/> .
 
 
 <> a conf:Configuration;
@@ -61,11 +61,12 @@
 ## 	IRIs namespace we use to replace the webapp base (eg. http://localhost:8080/lodview/), an
 ##	installation on dbpedia domain should use <http://dbpedia.org/resource/> 
 	
-	conf:IRInamespace <https://w3id.org/italia/>  ;
+	conf:IRInamespace <http://soilproject.org/> ;
+    # conf:IRInamespace <http://localhost:8080/lodview/> ;
 
 ## 	EndPoint
 
-	conf:endpoint <http://virtuoso:8890/sparql>;
+	conf:endpoint <http://localhost:8890/sparql/>;
 	conf:endpointType "virtuoso"; 	## 	just "virtuoso" is handled right now, this will add some "rawdata" 
 									##	options in the footer, leave this blank if you don't want these links
 

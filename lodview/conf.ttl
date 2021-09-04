@@ -66,7 +66,7 @@
 
 ## 	EndPoint
 
-	conf:endpoint <http://localhost:8890/sparql/>;
+	conf:endpoint <http://virtuoso:8890/sparql/>;
 	conf:endpointType "virtuoso"; 	## 	just "virtuoso" is handled right now, this will add some "rawdata" 
 									##	options in the footer, leave this blank if you don't want these links
 
@@ -77,7 +77,7 @@
 ##	to the HTML representation of the resources, live it blank if you want to 
 ##  use the "pure content negotiation mode", WARNING use suffix OR prefix, not both
 	
-	conf:httpRedirectSuffix ".html"; ## or eg. ".html";
+	conf:httpRedirectSuffix ""; ## or eg. ".html";
 	##conf:httpRedirectPrefix "/page/"; ## or eg. "";
 
 	##conf:httpRedirectExcludeList ""; 	## a comma separeted list of regex to match which resources will use "pure content negotiation mode"
@@ -169,7 +169,7 @@
 ##	you need also to add the ontology file in WEB-INF/ontologies
 ##	leave conf:mainOntologies blank if you don't want lodlive do this job 
 
-##	conf:mainOntologiesPrefixes	 YOUR-PREFIX:;	
+##	conf:mainOntologiesPrefixes	 soil:;	
 
 ##	document specific property used in the HTML resource page, it's possible to use
 ##	prefixes or not

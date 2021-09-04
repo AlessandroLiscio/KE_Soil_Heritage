@@ -5,6 +5,7 @@ RUN apt-get update \
 RUN git clone https://github.com/dvcama/LodView.git
 
 COPY conf.ttl /LodView/src/main/webapp/WEB-INF/
+COPY output.ttl /LodView/src/main/webapp/WEB-INF/ontologies/
 
 RUN cd LodView \
   && mvn compile war:war
@@ -12,5 +13,8 @@ RUN cd LodView \
 FROM tomcat:8
 COPY --from=lodview /LodView/target/lodview.war /usr/local/tomcat/webapps/
 ADD http://downloads.visualdataweb.de/webvowl_1.1.7.war /usr/local/tomcat/webapps/webvowl.war
+
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
 
 EXPOSE 8080

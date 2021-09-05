@@ -8,10 +8,7 @@ mkdir -p dumps
 
 if [ ! -f ./virtuoso.ini ];
 then
-  echo "VIRTUOSO.INI NOT FOUND" 
   mv /virtuoso.ini . 2>/dev/null
-else
-  echo "VIRTUOSO.INI FOUND"
 fi
 
 chmod +x /clean-logs.sh
@@ -39,7 +36,7 @@ fi
 
 if [ ! -f ".dba_pwd_set" ];
 then
-  touch /sql-q\h\n
+  touch /sql-query.sql
   if [ "$DBA_PASSWORD" ]; then echo "user_set_password('dba', '$DBA_PASSWORD');" >> /sql-query.sql ; fi
   if [ "$SPARQL_UPDATE" = "true" ]; then echo "GRANT SPARQL_UPDATE to \"SPARQL\";" >> /sql-query.sql ; fi
   virtuoso-t +wait && isql-v -U dba -P dba < /dump_nquads_procedure.sql && isql-v -U dba -P dba < /sql-query.sql
@@ -66,20 +63,11 @@ then
     kill $(ps aux | grep '[v]irtuoso-t' | awk '{print $2}')
 fi
 
-if [  -d "/ontologies" ]; then
-    echo "/ontologies exist, moving to /usr/local/virtuoso-opensource/share/virtuoso/vad"
-    mv /ontologies /usr/local/virtuoso-opensource/share/virtuoso/vad/ 
-else
-	echo "/ontologies does not exist"
-fi
-
 if [ ! -f ".ontologies_loaded" -a -d "/usr/local/virtuoso-opensource/share/virtuoso/vad/ontologies/" ] ;
 then
-    pwd="dba" ;
-    echo "Loading soilproject ontologies." ;
-    echo "Files in /usr/local/virtuoso-opensource/share/virtuoso/vad/ontologies: ";
-    ls /usr/local/virtuoso-opensource/share/virtuoso/vad/ontologies
-    echo "ld_dir_all('/usr/local/virtuoso-opensource/share/virtuoso/vad/ontologies', '*.ttl', 'https://soilproject.org');" > /load_ontologies.sql
+	pwd="dba" ;
+	echo "Loading Soilproject ontologies." ;
+	echo "ld_dir_all('/usr/local/virtuoso-opensource/share/virtuoso/vad/ontologies/', '*.ttl', 'https://soilproject.org/onto');" >> /load_ontologies.sql
     echo "rdf_loader_run();" >> /load_ontologies.sql
     echo "exec('checkpoint');" >> /load_ontologies.sql
     echo "WAIT_FOR_CHILDREN; " >> /load_ontologies.sql
@@ -92,3 +80,4 @@ fi
 crudini --set virtuoso.ini HTTPServer ServerPort ${VIRT_HTTPServer_ServerPort:-$original_port}
 
 exec virtuoso-t +wait +foreground
+# exec virtuoso-t +wait +configfile /virtuoso.ini

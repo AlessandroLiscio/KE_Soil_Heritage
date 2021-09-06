@@ -45,13 +45,10 @@ Activating the python environment can be done in the following way:
 ```
 $> source c:\path\to\myenv\bin\activate
 ```
-An example of a possible python virtual environment for this project could be:
+#### Quick Example:
+An example of python virtual environment initialization and activation could be:
 ```
-python -m venv usr/bin/.kenv 
-```
-To activate the environment:
-```
-source /usr/bin/.kenv/bin/activate
+python -m venv usr/bin/.kenv && source /usr/bin/.kenv/bin/activate
 ```
 
 ### Dependencies Installation

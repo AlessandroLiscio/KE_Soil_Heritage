@@ -1,12 +1,12 @@
 version: '2'
 services:
   virtuoso:
-    build: ./virtuoso
+    build:
+      context: ./
+      dockerfile: ./virtuoso/Dockerfile
     environment:
       SPARQL_UPDATE: "true"
-      # DEFAULT_GRAPH: "https://soilproject.org/onto"
-    # volumes:
-    #   - ./virtuoso/graphs:/graphs
+      DEFAULT_GRAPH: "https://soilproject.org/onto"
     ports:
       - "8890:8890"
   # lode:
@@ -17,3 +17,7 @@ services:
     build: ./lodview
     ports:
       - "8080:8080"
+  # lodlive:
+  #   build: ./lodlive
+  #   ports:
+  #     - "80:80"

@@ -36,7 +36,7 @@ for year in ['2012', '2015']:
 
         print(f'Working on {target}_{year}.csv')
         # Load Data
-        data = pd.read_csv(os.path.join('data', f'{target}_{year}.csv'), sep=";", encoding_errors='ignore')
+        data = pd.read_csv(os.path.join('data', f'{target}_{year}.csv'), sep=";", encoding='latin1') #encoding_errors='ignore')
 
         for i, row in data.iterrows():
 
@@ -142,7 +142,8 @@ for year in ['2012', '2015']:
                     ))
 
 print("graph has {} statements.".format(len(g)))
-g.serialize(destination='output.ttl', format='turtle')
+os.mkdir('./ontologies')
+g.serialize(destination='./ontologies/output.ttl', format='turtle')
 
 # Print the triples contained into the RDF graph.
 # for s, p, o in g:
@@ -151,10 +152,10 @@ g.serialize(destination='output.ttl', format='turtle')
 # ###########
 # # QUERIES #
 # ###########
-qres = g.query(
-    """SELECT ?s ?o
-        WHERE
-            { ?s rdfs:label ?o }""")
+# qres = g.query(
+#     """SELECT ?s ?o
+#         WHERE
+#             { ?s rdfs:label ?o }""")
 # 
 # qres = g.query(
 #     """SELECT ?name ?d ?v
@@ -176,7 +177,7 @@ qres = g.query(
 #             ?id <http://prova.attribute.ex/att#descrizione> ?descr
 #         }""")
 #
-print("###################################")
-for row in qres:
-    print("%s %s" % row)
-print("###################################")
+# print("###################################")
+# for row in qres:
+#     print("%s %s" % row)
+# print("###################################")

@@ -21,7 +21,7 @@ Once the containers are up and assuming that `localhost` is the reference host, 
  - WebVOWL at http://localhost:8080/webvowl
  - LodView at http://localhost:8080/lodview.
 
-###### Quick Examples:
+#### Quick Examples:
 Here are some quick links to show how information about the element
 "https://soilproject.org/onto/id/indicator/sc/REG10_2012_c116" can be visualized using the browser:
 

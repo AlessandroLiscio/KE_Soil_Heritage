@@ -31,8 +31,7 @@ Here are some quick links to show how information about the element
  - LodLive: **not implemented yet**
 
 ## Without Docker 
-The ontologies files can still be created without using Docker, by following
-the next steps.
+The ontologies files can still be created without using Docker by following the next steps.
 
 ### Virtual Environmment
 It is suggested that developers interested in editing the project without Docker, 

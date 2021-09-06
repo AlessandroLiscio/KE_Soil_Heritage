@@ -7,7 +7,7 @@ This projects provides the following facilities for enhancing user experience:
  - LodView for browsing ontology entities as well as controlloed vocabularies entities.
  - LodLive for visualising ontologies with the effectiveness of data graph representation;
 
-### Build and run
+### With Docker
 The project relies on Docker. To build and run the containers, navigate to the
 root folder of the project and run the following command:
 ```
@@ -21,11 +21,14 @@ Once the containers are up and assuming that `localhost` is the reference host, 
  - WebVOWL at http://localhost:8080/webvowl
  - LodView at http://localhost:8080/lodview.
 
-## Developers
+## Without Docker 
+The ontologies files can still be created without using Docker, by following
+the next steps.
 
 ### Virtual Environmment
-It is suggested that developers interested in editing the project, do it in a safe virtual environment.
-Initializing a new python environment can be done in the following way:
+It is suggested that developers interested in editing the project without Docker, 
+do it in a safe virtual environment. Initializing a new python environment can 
+be done in the following way:
 ```
 $> python -m venv c:\path\to\myenv
 ```
@@ -47,8 +50,9 @@ KE_Soil_Heritage requires Python 3.
 Once the source code has been downladed it is possible to install its dependencies
 by the means of pip using the *requirements.txt* in the *src* folder. For example:
 ```
-pip install -r requirements.txt 
-```   
+pip install -r src/requirements.txt 
+```
+
 ### Data Preparation
 Before running the *main.py* file to generate the ontology, the data needs to
 be extracted from the *soilc.zip* file and stored in a new *data* folder.

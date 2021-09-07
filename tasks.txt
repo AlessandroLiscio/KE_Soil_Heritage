@@ -32,4 +32,7 @@ v- build a single KG
 
 QUESTIONS:
  - manual mapping of ALL csv columns?
- - 
+ - what is precisely entity linking and ontology alignemnt?
+ - LODE?
+ - noi abbiamo un linked dataset. E' diverso da un ontologia?
+ - Dobbiamo fare un otologia? Come? 

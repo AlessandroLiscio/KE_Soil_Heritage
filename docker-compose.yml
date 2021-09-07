@@ -17,7 +17,7 @@ services:
     build: ./lodview
     ports:
       - "8080:8080"
-  # lodlive:
-  #   build: ./lodlive
-  #   ports:
-  #     - "80:80"
+  lodlive:
+    build: ./lodlive
+    ports:
+      - "80:80"

@@ -18,8 +18,8 @@ docker-compose build && docker-compose up
 Once the containers are up and assuming that `localhost` is the reference host, users can access:
  - Virtuoso SPARQL endpoint at http://localhost:8890/sparql;
  - LODE at http://localhost:9090/lode;
- - WebVOWL at http://localhost:8080/webvowl
  - LodView at http://localhost:8080/lodview.
+ - LodLive at http://localhost/app_en.html
 
 #### Quick Examples:
 Here are some quick links to show how information about the element
@@ -28,7 +28,7 @@ Here are some quick links to show how information about the element
  - Virtuoso: http://localhost:8890/sparql?default-graph-uri=&query=select+%3Fp+%3Fo+where+%7B+%3Chttps%3A%2F%2Fsoilproject.org%2Fonto%2Fid%2Findicator%2Fsc%2FREG10_2012_c116%3E+%3Fp+%3Fo+%7D&should-sponge=&format=text%2Fhtml&timeout=0&debug=on
  - LODE: **not implemented yet**
  - LodView: http://localhost:8080/lodview/onto/id/indicator/sc/REG10_2012_c116.html
- - LodLive: **not implemented yet**
+ - LodLive: http://localhost/app_en.html?https://soilproject.org/onto/id/indicator/sc/REG10_2012_c116
 
 ## Without Docker 
 The ontologies files can still be created without using Docker by following the next steps.

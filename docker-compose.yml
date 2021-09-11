@@ -6,7 +6,7 @@ services:
       dockerfile: ./virtuoso/Dockerfile
     environment:
       SPARQL_UPDATE: "true"
-      DEFAULT_GRAPH: "https://soilproject.org/onto"
+      # DEFAULT_GRAPH: "https://soilproject.org"
     ports:
       - "8890:8890"
   # lode:

@@ -1,6 +1,7 @@
 from pyrml import RMLConverter
 import os
 import pandas as pd
+from rdflib import Graph
 from rdflib.namespace import RDF, RDFS, SKOS, FOAF, DC
 from rdflib.term import URIRef, Literal
 
@@ -13,9 +14,12 @@ Invoke the method convert on the instance of class RMLConverter by:
  - obtaining an RDF graph as output.
 '''
 
+# Start from protégé graph
+protege_graph = Graph().parse('./data/webprotege.owl')
+
 # ATTRIBUTES
 rml_attribute_file_path = os.path.join('mappings', 'attribute-map.ttl')
-g = rml_converter.convert(rml_attribute_file_path)
+attributes_graph = rml_converter.convert(rml_attribute_file_path)
 
 # Define useful prefixes
 PREFIX_ATTRIBUTES = "https://soilproject.org/onto/id/skos/sc/"
@@ -29,6 +33,7 @@ PREFIX_ISPRA_PLACES = "http://dati.isprambiente.it/id/place/"
 # Get all the indicators useful information
 indicators_data = pd.read_csv(os.path.join('data', f'Descrizione_campi.csv'), sep=";")[6:]
 
+python_graph = Graph()
 for year in ['2012', '2015']:
     for target in ['Regioni']:
     # for target in ['Regioni', 'Province']:
@@ -63,25 +68,25 @@ for year in ['2012', '2015']:
             # REGION-YEAR COLLECTIONS #
             ###########################
             # rdfs:label
-            g.add(( 
+            python_graph.add((
                 URIRef(PREFIX_REG_YEAR_COLLECTION + f"{short}{code}_{year}"),
                 URIRef(RDFS.label),
                 Literal(f"Consumo del suolo per {long} {name} nell'anno {year}")
                 ))
             # rdfs:type
-            g.add(( 
+            python_graph.add((
                 URIRef(PREFIX_REG_YEAR_COLLECTION + f"{short}{code}_{year}"),
                 URIRef(RDF.type),
                 URIRef(PREFIX_ISPRA_CORE + "IndicatorCollection")
                 ))
             # foaf:PrimaryTopic
-            g.add(( 
+            python_graph.add((
                 URIRef(PREFIX_REG_YEAR_COLLECTION + f"{short}{code}_{year}"),
                 URIRef(FOAF.PrimaryTopic),
                 URIRef(PREFIX_ISPRA_PLACES + name_refactored)
                 ))
             # dc:date
-            g.add(( 
+            python_graph.add((
                 URIRef(PREFIX_REG_YEAR_COLLECTION + f"{short}{code}_{year}"),
                 URIRef(DC.date),
                 Literal(year)
@@ -98,52 +103,64 @@ for year in ['2012', '2015']:
                 # TARGET-YEAR-INDICATOR ENTITIES #
                 ##################################
                 # rdfs:label
-                g.add(( 
+                python_graph.add((
                     URIRef(PREFIX_INDICATORS + f"{short}{code}_{year}_{indicator.lower()}"),
                     URIRef(RDFS.label),
                     Literal(f"{short}{code}_{year}_{indicator}")
                     ))
                 # rdfs:comment (Description)
 
-                g.add(( 
+                python_graph.add((
                     URIRef(PREFIX_INDICATORS + f"{short}{code}_{year}_{indicator.lower()}"),
                     URIRef(RDFS.comment),
                     Literal(f"{indicators_data[indicators_data['Campo_ID'] == indicator]['Descrizione'].to_list()[0]} per {name} nell'anno {year}")
                     ))
                 # dc:isPartOf -> (TARGET-YEAR collection)
-                g.add(( 
+                python_graph.add((
                     URIRef(PREFIX_INDICATORS + f"{short}{code}_{year}_{indicator.lower()}"),
                     URIRef(DC.isPartOf),
                     URIRef(PREFIX_REG_YEAR_COLLECTION + f"{short}{code}_{year}")
                     ))
                 # dc:type
-                g.add(( 
+                python_graph.add((
                     URIRef(PREFIX_INDICATORS + f"{short}{code}_{year}_{indicator.lower()}"),
                     URIRef(DC.type),
                     URIRef(PREFIX_ATTRIBUTES + indicator.lower())
                     ))
                 # rdf:value -> from table
-                g.add(( 
+                python_graph.add((
                     URIRef(PREFIX_INDICATORS + f"{short}{code}_{year}_{indicator.lower()}"),
                     URIRef(RDF.value),
                     Literal(row[indicator])
                     ))
                 # foaf:PrimaryTopic
-                g.add(( 
+                python_graph.add((
                     URIRef(PREFIX_INDICATORS + f"{short}{code}_{year}_{indicator.lower()}"),
                     URIRef(FOAF.PrimaryTopic),
                     URIRef(PREFIX_ISPRA_PLACES + name_refactored)
                     ))
                 # dc:date
-                g.add(( 
+                python_graph.add((
                     URIRef(PREFIX_INDICATORS + f"{short}{code}_{year}_{indicator.lower()}"),
-                    URIRef(DC.date), 
+                    URIRef(DC.date),
                     Literal(year)
                     ))
 
-print("graph has {} statements.".format(len(g)))
+# Merge graphs
+final_graph = protege_graph + attributes_graph + python_graph
+
+# Print graph lengths
+print("protege_graph has {} statements.".format(len(protege_graph)))
+print("attributes_graph has {} statements.".format(len(attributes_graph)))
+print("python_graph has {} statements.".format(len(python_graph)))
+print("final_graph has {} statements.".format(len(final_graph)))
+
+# Serialize graphs to .ttl files
 os.mkdir('./ontologies')
-g.serialize(destination='./ontologies/output.ttl', format='turtle')
+protege_graph.serialize(destination='./ontologies/protege_graph.ttl', format='turtle')
+attributes_graph.serialize(destination='./ontologies/attributes_graph.ttl', format='turtle')
+python_graph.serialize(destination='./ontologies/python_graph.ttl', format='turtle')
+# final_graph.serialize(destination='./ontologies/final_graph.ttl', format='turtle')
 
 # Print the triples contained into the RDF graph.
 # for s, p, o in g:

@@ -2,7 +2,7 @@ $.jStorage.set('profile', {
 	// endpoint connection paramenters
   'connection' : {
 		/*matching all the requested URIs*/
-		'https://soilproject.org/' : {
+		'https://soilproject.org/onto/' : {
 			description : {
 				en : 'soilproject.org',
         it : 'soilproject.org',

@@ -7,7 +7,7 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix ispra: <http://dati.isprambiente.it/ontology/core/#> .
 
-@prefix pr: <https://soilproject/temp#> .
+@prefix pr: <https://soilproject.org/onto/temp#> .
 
 
 <#RegionsCSV>
@@ -20,7 +20,7 @@
 	rml:logicalSource <#RegionsCSV>;
 
   rr:subjectMap [
-    rr:template "https://soilproject/regions/{NOME_Regione}";
+    rr:template "https://soilproject.org/onto/regions/{NOME_Regione}";
     rr:class pr:Place
   ];
 

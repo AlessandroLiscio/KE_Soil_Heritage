@@ -4,8 +4,8 @@ FROM python:3.9.7-bullseye as app
 WORKDIR /src
 COPY src/ ./
 
-RUN pip install -r requirements.txt \
-    && chmod +x prep_data.sh \
+RUN pip install -r requirements.txt
+RUN chmod +x prep_data.sh \
     && ./prep_data.sh \
     && python main.py
 

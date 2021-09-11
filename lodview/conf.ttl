@@ -61,7 +61,7 @@
 ## 	IRIs namespace we use to replace the webapp base (eg. http://localhost:8080/lodview/), an
 ##	installation on dbpedia domain should use <http://dbpedia.org/resource/> 
 	
-	conf:IRInamespace <https://soilproject.org/>  ;
+	conf:IRInamespace <https://soilproject.org/onto/>  ;
 
 ## 	EndPoint
 

@@ -44,7 +44,7 @@ indicators_graph = Graph()
 for i, row in indicators_data.iterrows():
 
     # Store fields in variables
-    indicator_id = row['Campo_ID']
+    indicator_id = row['Campo_ID'].lower()
     indicator_name = row['Campo']
     indicator_descr = row['Descrizione']
 
@@ -52,7 +52,7 @@ for i, row in indicators_data.iterrows():
     indicators_graph.add((
         URIRef(PREFIX_INDICATOR + f"/{indicator_id}"),
         URIRef(RDF.type),
-        Literal(PREFIX_INDICATOR)
+        URIRef(PREFIX_INDICATOR)
     ))
     # Indicator label
     indicators_graph.add((

@@ -16,19 +16,19 @@ docker-compose build && docker-compose up
 
 ### Usage
 Once the containers are up and assuming that `localhost` is the reference host, users can access:
- - Virtuoso SPARQL endpoint at http://localhost:8890/sparql;
- - LODE at http://localhost:9090/lode;
- - LodView at http://localhost:8080/lodview.
+ - Virtuoso SPARQL endpoint at http://localhost:8890/sparql
+ - LODE at http://localhost/app_en.html
+ - LodView at http://localhost:8080/lodview
  - LodLive at http://localhost/app_en.html
 
 #### Quick Examples:
 Here are some quick links to show how information about the element
-"https://soilproject.org/onto/id/indicator/sc/REG10_2012_c116" can be visualized using the browser:
+"https://soilproject.org/onto/Indicatore" can be visualized using the browser:
 
- - Virtuoso: http://localhost:8890/sparql?default-graph-uri=&query=select+%3Fp+%3Fo+where+%7B+%3Chttps%3A%2F%2Fsoilproject.org%2Fonto%2Fid%2Findicator%2Fsc%2FREG10_2012_c116%3E+%3Fp+%3Fo+%7D&should-sponge=&format=text%2Fhtml&timeout=0&debug=on
- - LODE: **not implemented yet**
- - LodView: http://localhost:8080/lodview/id/indicator/sc/REG10_2012_c116.html
- - LodLive: http://localhost/app_en.html?https://soilproject.org/onto/id/indicator/sc/REG10_2012_c116
+ - Virtuoso: http://localhost:8890/sparql?query=select?p?o{%3Chttps://soilproject.org/onto/Indicatore%3E?p?o}
+ - LODE: **not yet implemented**
+ - LodView: http://localhost:8080/lodview/Indicatore 
+ - LodLive: http://localhost/app_en.html?https://soilproject.org/onto/Indicatore
 
 ## Without Docker 
 The ontologies files can still be created without using Docker by following the next steps.
@@ -72,9 +72,9 @@ the following command:
 ```
 chmod +x ./prep_data.sh && ./prep_data.sh
 ```   
-Congrats, now you have your data set up and you are ready to go!
+Congrats, now you have your data set up and ready to be used!
 
 ### Create Ontologies Files
-All you need to do is to navigate to the project *src* folder and run
+All you need to do is navigate to the project *src* folder and run
 the *main.py* script. Once it has finished all the computation, the ontologies
 files will be stored in the *src/ontologies* folder.

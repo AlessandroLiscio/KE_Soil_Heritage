@@ -17,6 +17,6 @@ for FILENAME in data/*.utf8; do
     mv $FILENAME ${FILENAME%.utf8}.csv;
 done 
 
-cp webprotege.owl data/webprotege.owl
+cp baseline.owl data/baseline.owl
 
 exit 0

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Remove data/ folder if already exists
+rm -rf data/
+
 # Unzip file and store in folder data/
 unzip -qq -j soilc.zip -d data/
 

@@ -52,7 +52,7 @@
 @prefix claros: <http://purl.org/NET/Claros/vocab#> .
 @prefix crm120111: <http://erlangen-crm.org/120111/> .
 @prefix rel: <http://purl.org/vocab/relationship/> .
-@prefix soil-ont: <https://soilproject.org/onto/> .
+@prefix soil: <https://soilproject.org/> .
 
 
 <> a conf:Configuration;
@@ -61,7 +61,7 @@
 ## 	IRIs namespace we use to replace the webapp base (eg. http://localhost:8080/lodview/), an
 ##	installation on dbpedia domain should use <http://dbpedia.org/resource/> 
 	
-	conf:IRInamespace <https://soilproject.org/onto/>  ;
+	conf:IRInamespace <https://soilproject.org/>  ;
 
 ## 	EndPoint
 
@@ -169,6 +169,7 @@
 ##	leave conf:mainOntologies blank if you don't want lodlive do this job 
 
 ##	conf:mainOntologiesPrefixes	 YOUR-PREFIX:;	
+	conf:mainOntologiesPrefixes	 soil:;
 
 ##	document specific property used in the HTML resource page, it's possible to use
 ##	prefixes or not

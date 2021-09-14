@@ -1,27 +1,38 @@
+/*
+ just an example of configuration useful to redirect all the request on the same endpoint
+ */
+
 $.jStorage.set('profile', {
-	// endpoint connection paramenters
-  'connection' : {
+	// parametri di connessione agli endpoint
+	'connection' : {
 		/*matching all the requested URIs*/
-		'https://soilproject.org/onto/' : {
-			description : {
-				en : 'soilproject.org',
+		'http' : {
+      description : {
+        en : 'soilproject.org',
         it : 'soilproject.org',
-        fr : 'soilproject.org'
-			},
+      },
 			useForInverseSameAs : true,
+			/*change this*/
 			endpoint : 'http://localhost:8890/sparql',
-			examples : [{
-				label : 'test 1',
-				uri : 'https://soilproject.org/onto/id/indicator/sc/REG10_2012_c116'
+      examples : [{
+          label : 'Indicatore',
+          uri : 'https://soilproject.org/onto/Indicatore'
+        }, {
+          label : 'CollezioneIndicatori',
+          uri : 'https://soilproject.org/onto/CollezioneIndicatori'
+			}, {
+          label : 'Luogo',
+          uri : 'https://soilproject.org/onto/Luogo'
 			}]
 		}
 	},
-	arrows : {
-		'http://www.w3.org/2002/07/owl#sameAs' : 'isSameAs',
-		'http://purl.org/dc/terms/isPartOf' : 'isPartOf',
-		'http://purl.org/dc/elements/1.1/type' : 'isType',
-		'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' : 'isType'
-	},
+  arrows : {
+    'http://www.w3.org/2002/07/owl#sameas' : 'issameas',
+    'http://purl.org/dc/terms/ispartof' : 'ispartof',
+    'http://purl.org/dc/elements/1.1/type' : 'istype',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' : 'istype',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#subclassof' : 'issubclassof'
+  };
 	uriSubstitutor : [{
 		findStr : 'mpii.de/yago/resource/',
 		replaceStr : 'yago-knowledge.org/resource/'
@@ -36,7 +47,7 @@ $.jStorage.set('profile', {
 			documentUri : 'SELECT DISTINCT * WHERE {<{URI}> ?property ?object} ORDER BY ?property',
 			document : 'SELECT DISTINCT * WHERE {<{URI}> ?property ?object}',
 			bnode : 'SELECT DISTINCT *  WHERE {<{URI}> ?property ?object}',
-			inverse : 'SELECT DISTINCT * WHERE {?object ?property <{URI}>.} LIMIT 100',
+			inverse : 'SELECT DISTINCT * WHERE {?object ?property <{URI}>.} LIMIT 101',
 			inverseSameAs : 'SELECT DISTINCT * WHERE {{?object <http://www.w3.org/2002/07/owl#sameAs> <{URI}> } UNION { ?object <http://www.w3.org/2004/02/skos/core#exactMatch> <{URI}>}}'
 		},
 		endpoint : 'http://labs.regesta.com/resourceProxy/',
@@ -105,7 +116,7 @@ $.jStorage.set('doDrawMap', $.jStorage.get('doDrawMap', true));
 $.jStorage.set('showInfoConsole', $.jStorage.get('showInfoConsole', true));
 
 $.jStorage.set('endpoints', {
-	all : 'output=json&format=application/json&timeout=0',
-	arcSparql : 'output=json&jsonp=lodlive',
-	sesame : 'Accept=application/sparql-results%2Bjson'
+	all : 'output=json&format=application/json&timeout=0'//,
+	// arcSparql : 'output=json&jsonp=lodlive',
+	// sesame : 'Accept=application/sparql-results%2Bjson'
 });

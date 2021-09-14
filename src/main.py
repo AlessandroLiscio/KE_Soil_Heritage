@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import re
 
-from rdflib import Graph
+from rdflib import Graph, Namespace
 from rdflib.namespace import RDF, RDFS, SKOS, FOAF, DC
 from rdflib.term import URIRef, Literal
 
@@ -27,13 +27,14 @@ from rdflib.term import URIRef, Literal
 #     a post code (depending on the nature of the instance).
 
 # Define useful prefixes
-PREFIX_SOILPROJECT = "https://soilproject.org/onto"
+PROTOCOL = 'https'
+DOMAIN = 'soilproject.org'
+ET_ONTOLOGY = 'onto'
+ET_ID = 'id'
 
-#TODO: change this prefixes
-PREFIX_TEMP =                   PREFIX_SOILPROJECT+"/TEMP#"
-PREFIX_ATTRIBUTI =              PREFIX_SOILPROJECT+"/Attributi"
-PREFIX_COLLEZIONE_INDICATORI =  PREFIX_SOILPROJECT+"/CollezioneIndicatori"
-PREFIX_INDICATORE =             PREFIX_SOILPROJECT+"/Indicatore"
+sp_onto = Namespace(f"{PROTOCOL}://{DOMAIN}/{ET_ONTOLOGY}/")
+sp_id = Namespace(f"{PROTOCOL}://{DOMAIN}/{ET_ID}/")
+temp = Namespace(f"{PROTOCOL}://{DOMAIN}/temp/")
 
 ###############################################################################
 ############################# BASELINE GRAPH ##################################
@@ -49,7 +50,8 @@ protege_graph = Graph().parse('./data/baseline.owl')
 ###############################################################################
 
 # Load indicators data
-indicators_data = pd.read_csv(os.path.join('data', 'Descrizione_campi.csv'), sep=";")[6:]
+indicators_data = pd.read_csv(os.path.join('data', 'Descrizione_campi.csv'),
+                              sep=";")[6:].reset_index(drop=True)
 
 # Initialize indicators dictionary for mapping to the right classes in the baseline graph
 indicators_dict = {
@@ -125,45 +127,51 @@ indicators_dict = {
 
 # Create indicators graph
 indicators_graph = Graph()
+
 print(">>> Creating graph: indicators")
-
 for i, row in indicators_data.iterrows():
-
+    
     # Store fields in variables
     indicator_id = row['Campo_ID'].lower()
-    indicator_name = row['Campo']
+    indicator_name = row['Campo'].replace('_', ' ')
     indicator_descr = row['Descrizione']
 
     # Find the indicator class by looking into the vocabulary
     for key in indicators_dict:
-        if i in indicators_dict[key]['ids']:
+        if (i+1) in indicators_dict[key]['ids']:
             indicator_class = key
             break
 
-   # Indicator class
+   # rdf:type
     indicators_graph.add((
-        URIRef(PREFIX_INDICATORE + f"/{indicator_id}"),
-        URIRef(RDF.type),
-        URIRef(PREFIX_SOILPROJECT + f"/{indicator_class}")
+        URIRef(sp_id.Indicatore +"/"+ indicator_id),
+        RDF.type,
+        URIRef(sp_onto + indicator_class)
     ))
-    # Indicator label
+    # rdfs:label
     indicators_graph.add((
-        URIRef(PREFIX_INDICATORE + f"/{indicator_id}"),
-        URIRef(RDFS.label),
-        Literal(indicator_id)
+        URIRef(sp_id.Indicatore +"/"+ indicator_id),
+        RDFS.label,
+        Literal(indicator_name)
     ))
-    # Indicator description
+    # rdfs:comment
     indicators_graph.add((
-        URIRef(PREFIX_INDICATORE + f"/{indicator_id}"),
-        URIRef(RDFS.comment),
+        URIRef(sp_id.Indicatore +"/"+ indicator_id),
+        RDFS.comment,
         Literal(indicator_descr)
     ))
-    # Indicator metric
+    # temp:identificatore
+    indicators_graph.add((
+        URIRef(sp_id.Indicatore +"/"+ indicator_id),
+        URIRef(temp + "/identificatore"),
+        Literal(indicator_id)
+    ))
+    # temp:metrica
     indicator_metric = re.search('\[(.*?)\]', indicator_descr)
     if indicator_metric is not None:
         indicators_graph.add((
-            URIRef(PREFIX_INDICATORE + f"/{indicator_id}"),
-            URIRef(PREFIX_TEMP + "metric"),
+            URIRef(sp_id.Indicatore + "/" + indicator_id),
+            URIRef(temp + "/metrica"),
             Literal(indicator_metric.group(0))
         ))
     # Indicator parameters
@@ -172,8 +180,8 @@ for i, row in indicators_data.iterrows():
         param_value = re.search(indicators_dict[key]['params_regex'][j], indicator_name)
         if param_value is not None:
             indicators_graph.add((
-                URIRef(PREFIX_INDICATORE + f"/{indicator_id}"),
-                URIRef(PREFIX_TEMP + param.replace(' ','_')),
+                URIRef(sp_id.Indicatore + "/" + indicator_id),
+                URIRef(temp + "/" + param.replace(' ','_')),
                 Literal(param_value.group(0).replace('_',' '))
             ))
 
@@ -183,8 +191,8 @@ for i, row in indicators_data.iterrows():
 
 # Create indicatorCollection graph
 indicatorCollection_graph = Graph()
-print(">>> Creating graph: indicatorCollection")
 
+print(">>> Creating graph: indicatorCollection")
 for year in ['2012', '2015']:
     for place in ['Regioni']:
     # for place in ['Regioni', 'Province']:
@@ -216,32 +224,34 @@ for year in ['2012', '2015']:
                 name = row['NOME_Comune']
             name_refactored = name.replace(' ','-').lower()
 
-
             ##########################
             # PLACE-YEAR COLLECTIONS #
             ##########################
-            # rdfs:label
-            indicatorCollection_graph.add((
-                URIRef(PREFIX_COLLEZIONE_INDICATORI + f"{SHORT}{code}_{year}"),
-                URIRef(RDFS.label),
-                Literal(f"Consumo del suolo per {LONG} {name} nell'anno {year}")
-                ))
+
+            indicator_collection = f"/{SHORT}{code}_{year}"
+
             # rdfs:type
             indicatorCollection_graph.add((
-                URIRef(PREFIX_COLLEZIONE_INDICATORI + f"{SHORT}{code}_{year}"),
-                URIRef(RDF.type),
-                URIRef(PREFIX_TEMP + "IndicatorCollection")
+                URIRef(sp_id.CollezioneIndicatori + indicator_collection),
+                RDF.type,
+                URIRef(sp_onto.CollezioneIndicatori)
+                ))
+            # rdfs:label
+            indicatorCollection_graph.add((
+                URIRef(sp_id.CollezioneIndicatori + indicator_collection),
+                RDFS.label,
+                Literal(f"Consumo del suolo per {LONG} {name} nell'anno {year}")
                 ))
             # foaf:PrimaryTopic
             indicatorCollection_graph.add((
-                URIRef(PREFIX_COLLEZIONE_INDICATORI + f"{SHORT}{code}_{year}"),
-                URIRef(FOAF.PrimaryTopic),
-                URIRef(PREFIX_TEMP + name_refactored)
+                URIRef(sp_id.CollezioneIndicatori + indicator_collection),
+                FOAF.PrimaryTopic,
+                URIRef(sp_onto.Luogo + "/" + name_refactored)
                 ))
             # dc:date
             indicatorCollection_graph.add((
-                URIRef(PREFIX_COLLEZIONE_INDICATORI + f"{SHORT}{code}_{year}"),
-                URIRef(DC.date),
+                URIRef(sp_id.CollezioneIndicatori + indicator_collection),
+                DC.date,
                 Literal(year)
                 ))
 
@@ -254,48 +264,50 @@ for year in ['2012', '2015']:
 
                 ##################################
                 # PLACE-YEAR-INDICATOR ENTITIES #
-                ################################## 
+                ##################################
+
+                indicator_entity = f"/{SHORT}{code}_{year}_{indicator.lower()}"
+
                 # rdfs:label
                 indicatorCollection_graph.add((
-                    URIRef(PREFIX_INDICATORE + f"{SHORT}{code}_{year}_{indicator.lower()}"),
-                    URIRef(RDFS.label),
-                    Literal(f"{SHORT}{code}_{year}_{indicator}")
-                    ))
-                # rdfs:comment (Description)
-
-                indicatorCollection_graph.add((
-                    URIRef(PREFIX_INDICATORE + f"{SHORT}{code}_{year}_{indicator.lower()}"),
-                    URIRef(RDFS.comment),
-                    Literal(f"{indicators_data[indicators_data['Campo_ID'] == indicator]['Descrizione'].to_list()[0]} per {name} nell'anno {year}")
-                    ))
-                # dc:isPartOf -> (PLACE-YEAR collection)
-                indicatorCollection_graph.add((
-                    URIRef(PREFIX_INDICATORE + f"{SHORT}{code}_{year}_{indicator.lower()}"),
-                    URIRef(DC.isPartOf),
-                    URIRef(PREFIX_COLLEZIONE_INDICATORI + f"{SHORT}{code}_{year}")
+                    URIRef(sp_id.Indicatore + indicator_entity),
+                    RDFS.label,
+                    Literal(indicator_collection[1:] + "_{indicator}")
                     ))
                 # dc:type
                 indicatorCollection_graph.add((
-                    URIRef(PREFIX_INDICATORE + f"{SHORT}{code}_{year}_{indicator.lower()}"),
-                    URIRef(DC.type),
-                    URIRef(PREFIX_ATTRIBUTI + indicator.lower())
+                    URIRef(sp_id.Indicatore + indicator_entity),
+                    DC.type,
+                    URIRef(temp + "/" + indicator.lower())
                     ))
-                # rdf:value -> from table
+                # rdfs:comment
                 indicatorCollection_graph.add((
-                    URIRef(PREFIX_INDICATORE + f"{SHORT}{code}_{year}_{indicator.lower()}"),
-                    URIRef(RDF.value),
+                    URIRef(sp_id.Indicatore + indicator_entity),
+                    RDFS.comment,
+                    Literal(f"{indicators_data[indicators_data['Campo_ID'] == indicator]['Descrizione'].to_list()[0]} per {name} nell'anno {year}")
+                    ))
+                # dc:isPartOf
+                indicatorCollection_graph.add((
+                    URIRef(sp_id.Indicatore + indicator_entity),
+                    DC.isPartOf,
+                    URIRef(sp_id.CollezioneIndicatori + indicator_collection)
+                    ))
+                # rdf:value
+                indicatorCollection_graph.add((
+                    URIRef(sp_id.Indicatore + indicator_entity),
+                    RDF.value,
                     Literal(row[indicator])
                     ))
                 # foaf:PrimaryTopic
                 indicatorCollection_graph.add((
-                    URIRef(PREFIX_INDICATORE + f"{SHORT}{code}_{year}_{indicator.lower()}"),
-                    URIRef(FOAF.PrimaryTopic),
-                    URIRef(PREFIX_TEMP + name_refactored)
+                    URIRef(sp_id.Indicatore + indicator_entity),
+                    FOAF.PrimaryTopic,
+                    URIRef(sp_onto.Luogo + "/" + name_refactored)
                     ))
                 # dc:date
                 indicatorCollection_graph.add((
-                    URIRef(PREFIX_INDICATORE + f"{SHORT}{code}_{year}_{indicator.lower()}"),
-                    URIRef(DC.date),
+                    URIRef(sp_id.Indicatore + indicator_entity),
+                    DC.date,
                     Literal(year)
                     ))
 
@@ -306,6 +318,12 @@ for year in ['2012', '2015']:
 
 # Merge graphs
 final_graph = protege_graph + indicators_graph + indicatorCollection_graph
+final_graph.bind("sp-onto", sp_onto)
+final_graph.bind("sp-id", sp_id)
+final_graph.bind("rdf", RDF)
+final_graph.bind("rdfs", RDFS)
+final_graph.bind("foaf", FOAF)
+final_graph.bind("dc", DC)
 print("######################################################################")
 print(">>> protege graph statements: {}".format(len(protege_graph)))
 print(">>> indicators graph statements: {}".format(len(indicators_graph)))
@@ -321,7 +339,7 @@ final_graph.serialize(destination='./ontologies/final_graph.ttl', format='turtle
 ############################# EXAMPLE QUERY ###################################
 ###############################################################################
 
-QUERY = "SELECT ?s WHERE { ?s a ?Class }"
+QUERY = "SELECT DISTINCT ?s WHERE { ?s ?p ?o }"
 qres = final_graph.query(QUERY)
 print(">>> Query: ", QUERY)
 for row in qres: print("%s" % row)

@@ -27,7 +27,7 @@ Here are some quick links to show how information about the element
 
  - Virtuoso: http://localhost:8890/sparql?query=select?p?o{%3Chttps://soilproject.org/onto/Indicatore%3E?p?o}
  - LODE: **not yet implemented**
- - LodView: http://localhost:8080/lodview/Indicatore 
+ - LodView: http://localhost:8080/lodview/onto/Indicatore 
  - LodLive: http://localhost/app_en.html?https://soilproject.org/onto/Indicatore
 
 ## Without Docker 

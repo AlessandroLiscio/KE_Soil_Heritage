@@ -5,4 +5,5 @@ RUN apt-get update && \
 	git clone https://github.com/LodLive/LodLive.git && \
 	mv LodLive/* /usr/share/nginx/html/
 
-COPY lodlive.profile.js /usr/share/nginx/html/js/
+# COPY lodlive.profile.js /usr/share/nginx/html/js/
+COPY js/* /usr/share/nginx/html/js/

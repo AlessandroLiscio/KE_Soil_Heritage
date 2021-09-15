@@ -143,8 +143,7 @@
 ##	if you are using a proxy, set it at <auto> for testing, an installation on dbpedia
 ##	domain should use <http://dbpedia.org/resource/>
 
-	/* conf:publicUrlPrefix <auto>; ## or <auto> */
-	conf:publicUrlPrefix <https://soilproject.org/>; ## or <auto>
+	conf:publicUrlPrefix <auto>; ## or <auto>
 
 
 ## solve IRI issues in particular environments (proxypass, etc.)
@@ -153,8 +152,7 @@
 
 ##	home link (accessible from the banner)
 
-	/* conf:homeUrl <http://remember to change this in conf.ttl>; */
-	conf:homeUrl <https://soilproject.org/>;
+	conf:homeUrl <http://remember to change this in conf.ttl>;
 
   	
 ##	static resources publishing point, "staticResources/" is needed if you are going 
@@ -171,7 +169,6 @@
 ##	leave conf:mainOntologies blank if you don't want lodlive do this job 
 
 ##	conf:mainOntologiesPrefixes	 YOUR-PREFIX:;	
-	conf:mainOntologiesPrefixes	 soil:;
 
 ##	document specific property used in the HTML resource page, it's possible to use
 ##	prefixes or not

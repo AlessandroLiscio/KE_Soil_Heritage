@@ -105,7 +105,7 @@ indicators_dict = {
         'params': [ 'tipo superficie', 'distanza' ],
         'params_regex': [r'alterata|non_alterata',r'\dm']
     },
-    'IndicatoreAreaCostruitaRispettoAreaDensità' : {
+    'IndicatoreAreaCostruitaRispettoClasseDensità' : {
         'ids': [93,94,95,96],
         'params': [ 'distanza', 'classe area densità' ],
         'params_regex': [r'\dm', r'1|2_3']
@@ -317,7 +317,7 @@ for year in ['2012', '2015']:
 ###############################################################################
 
 # Merge graphs
-final_graph = protege_graph + indicators_graph + indicatorCollection_graph
+final_graph = protege_graph  + indicators_graph + indicatorCollection_graph
 final_graph.bind("sp-onto", sp_onto)
 final_graph.bind("sp-id", sp_id)
 final_graph.bind("rdf", RDF)

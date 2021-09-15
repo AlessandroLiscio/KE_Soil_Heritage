@@ -71,10 +71,10 @@
 
     <!-- https://soilproject.org/onto/IndicatoreConsumoSuoloDistanzaCorpiIdrici -->
 
-    <owl:Class rdf:about="https://soilproject.org/onto/IndicatoreConsumoSuoloDisanzaCorpiIdrici">
+    <owl:Class rdf:about="https://soilproject.org/onto/IndicatoreConsumoSuoloDistanzaCorpiIdrici">
         <rdfs:subClassOf rdf:resource="https://soilproject.org/onto/IndicatoreConsumoSuolo"/>
         <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Indicatore del consumo di suolo ad una certa distanza da corpi idrici</rdfs:comment>
-        <rdfs:label>Indicatore Consumo Suolo Disanza Corpi Idrici</rdfs:label>
+        <rdfs:label>Indicatore Consumo Suolo Distanza Corpi Idrici</rdfs:label>
     </owl:Class>
     
 
@@ -127,27 +127,27 @@
     
 
 
-    <!-- https://soilproject.org/onto/IndicatoreAreaClasseDensit%C3%A0 -->
+    <!-- https://soilproject.org/onto/IndicatoreAreaClasseDensità -->
 
-    <owl:Class rdf:about="https://soilproject.org/onto/IndicatoreAreaClasseDensit%C3%A0">
+    <owl:Class rdf:about="https://soilproject.org/onto/IndicatoreAreaClasseDensità">
         <rdfs:subClassOf rdf:resource="https://soilproject.org/onto/IndicatoreAltro"/>
         <rdfs:label>Indicatore Area Classe Densità</rdfs:label>
     </owl:Class>
     
 
 
-    <!-- https://soilproject.org/onto/IndicatoreAreaCostruitaRispettoClasseDensit%C3%A0 -->
+    <!-- https://soilproject.org/onto/IndicatoreAreaCostruitaRispettoClasseDensità -->
 
-    <owl:Class rdf:about="https://soilproject.org/onto/IndicatoreAreaCostruitaRispettoClasseDensit%C3%A0">
+    <owl:Class rdf:about="https://soilproject.org/onto/IndicatoreAreaCostruitaRispettoClasseDensità">
         <rdfs:subClassOf rdf:resource="https://soilproject.org/onto/IndicatoreAltro"/>
         <rdfs:label>Indicatore Area Costruita Rispetto Classe Densità</rdfs:label>
     </owl:Class>
     
 
 
-    <!-- https://soilproject.org/onto/IndicatoreConsumoSuoloPericolosit%C3%A0 -->
+    <!-- https://soilproject.org/onto/IndicatoreConsumoSuoloPericolosità -->
 
-    <owl:Class rdf:about="https://soilproject.org/onto/IndicatoreConsumoSuoloPericolosit%C3%A0">
+    <owl:Class rdf:about="https://soilproject.org/onto/IndicatoreConsumoSuoloPericolosità">
         <rdfs:subClassOf rdf:resource="https://soilproject.org/onto/IndicatoreConsumoSuolo"/>
         <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Indicatore del consumo di suolo in una certa area di pericolisità</rdfs:comment>
         <rdfs:label>Indicatore Consumo Suolo Pericolosità</rdfs:label>
@@ -155,30 +155,30 @@
     
 
 
-    <!-- https://soilproject.org/onto/IndicatoreConsumoSuoloPericolosit%C3%A0Frane -->
+    <!-- https://soilproject.org/onto/IndicatoreConsumoSuoloPericolositàFrane -->
 
-    <owl:Class rdf:about="https://soilproject.org/onto/IndicatoreConsumoSuoloPericolosit%C3%A0Frane">
-        <rdfs:subClassOf rdf:resource="https://soilproject.org/onto/IndicatoreConsumoSuoloPericolosit%C3%A0"/>
+    <owl:Class rdf:about="https://soilproject.org/onto/IndicatoreConsumoSuoloPericolositàFrane">
+        <rdfs:subClassOf rdf:resource="https://soilproject.org/onto/IndicatoreConsumoSuoloPericolosità"/>
         <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Indicatore del consumo di suolo in una certa area di pericolosità frane</rdfs:comment>
         <rdfs:label>Indicatore Consumo Suolo Pericolosità Frane</rdfs:label>
     </owl:Class>
     
 
 
-    <!-- https://soilproject.org/onto/IndicatoreConsumoSuoloPericolosit%C3%A0Idraulica -->
+    <!-- https://soilproject.org/onto/IndicatoreConsumoSuoloPericolositàIdraulica -->
 
-    <owl:Class rdf:about="https://soilproject.org/onto/IndicatoreConsumoSuoloPericolosit%C3%A0Idraulica">
-        <rdfs:subClassOf rdf:resource="https://soilproject.org/onto/IndicatoreConsumoSuoloPericolosit%C3%A0"/>
+    <owl:Class rdf:about="https://soilproject.org/onto/IndicatoreConsumoSuoloPericolositàIdraulica">
+        <rdfs:subClassOf rdf:resource="https://soilproject.org/onto/IndicatoreConsumoSuoloPericolosità"/>
         <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Indicatore del consumo di suolo in una certa area di pericolosità idraulica</rdfs:comment>
         <rdfs:label>Indicatore Consumo Suolo Pericolosità Idraulica</rdfs:label>
     </owl:Class>
     
 
 
-    <!-- https://soilproject.org/onto/IndicatoreConsumoSuoloPericolosit%C3%A0Sismica -->
+    <!-- https://soilproject.org/onto/IndicatoreConsumoSuoloPericolositàSismica -->
 
-    <owl:Class rdf:about="https://soilproject.org/onto/IndicatoreConsumoSuoloPericolosit%C3%A0Sismica">
-        <rdfs:subClassOf rdf:resource="https://soilproject.org/onto/IndicatoreConsumoSuoloPericolosit%C3%A0"/>
+    <owl:Class rdf:about="https://soilproject.org/onto/IndicatoreConsumoSuoloPericolositàSismica">
+        <rdfs:subClassOf rdf:resource="https://soilproject.org/onto/IndicatoreConsumoSuoloPericolosità"/>
         <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Indicatore del consumo di suolo in una certa area di pericolosità sismica</rdfs:comment>
         <rdfs:label>Indicatore Consumo Suolo Pericolosità Sismica</rdfs:label>
     </owl:Class>

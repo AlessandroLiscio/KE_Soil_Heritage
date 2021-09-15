@@ -272,7 +272,7 @@ for year in ['2012', '2015']:
                 indicatorCollection_graph.add((
                     URIRef(sp_id.Indicatore + indicator_entity),
                     RDFS.label,
-                    Literal(indicator_collection[1:] + "_{indicator}")
+                    Literal(indicator_collection[1:] + f"_{indicator}")
                     ))
                 # dc:type
                 indicatorCollection_graph.add((
@@ -339,8 +339,8 @@ final_graph.serialize(destination='./ontologies/final_graph.ttl', format='turtle
 ############################# EXAMPLE QUERY ###################################
 ###############################################################################
 
-QUERY = "SELECT DISTINCT ?s WHERE { ?s ?p ?o }"
-qres = final_graph.query(QUERY)
-print(">>> Query: ", QUERY)
-for row in qres: print("%s" % row)
-print("######################################################################")
+# QUERY = "SELECT DISTINCT ?s WHERE { ?s ?p ?o }"
+# qres = final_graph.query(QUERY)
+# print(">>> Query: ", QUERY)
+# for row in qres: print("%s" % row)
+# print("######################################################################")

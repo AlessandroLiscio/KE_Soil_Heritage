@@ -7,6 +7,7 @@
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
     <owl:Ontology rdf:about="urn:webprotege:ontology:b2171944-0d38-49a2-8d31-4d36c1cd6b56"/>
+    <!-- <owl:Ontology rdf:about="SoilProject"/> -->
     
 
 
@@ -68,7 +69,7 @@
     
 
 
-    <!-- https://soilproject.org/onto/IndicatoreConsumoSuoloDisanzaCorpiIdrici -->
+    <!-- https://soilproject.org/onto/IndicatoreConsumoSuoloDistanzaCorpiIdrici -->
 
     <owl:Class rdf:about="https://soilproject.org/onto/IndicatoreConsumoSuoloDisanzaCorpiIdrici">
         <rdfs:subClassOf rdf:resource="https://soilproject.org/onto/IndicatoreConsumoSuolo"/>

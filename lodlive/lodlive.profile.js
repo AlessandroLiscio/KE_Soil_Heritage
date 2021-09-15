@@ -1,12 +1,10 @@
-/*
- just an example of configuration useful to redirect all the request on the same endpoint
- */
-
-$.jStorage.set('profile', {
+$.jStorage.set(
+'profile', {
 	// parametri di connessione agli endpoint
 	'connection' : {
 		/*matching all the requested URIs*/
-		'http' : {
+    // 'http' : {
+    'https://soilproject.org/' : {
       description : {
         en : 'soilproject.org',
         it : 'soilproject.org',
@@ -20,26 +18,26 @@ $.jStorage.set('profile', {
         }, {
           label : 'CollezioneIndicatori',
           uri : 'https://soilproject.org/onto/CollezioneIndicatori'
-			}, {
+			  }, {
           label : 'Luogo',
           uri : 'https://soilproject.org/onto/Luogo'
 			}]
 		}
 	},
+  // here we define the known relationships so that labels will appear
   arrows : {
-    'http://www.w3.org/2002/07/owl#sameas' : 'issameas',
-    'http://purl.org/dc/terms/ispartof' : 'ispartof',
-    'http://purl.org/dc/elements/1.1/type' : 'istype',
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' : 'istype',
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#subclassof' : 'issubclassof'
-  };
-	uriSubstitutor : [{
-		findStr : 'mpii.de/yago/resource/',
-		replaceStr : 'yago-knowledge.org/resource/'
-	}],
-
-	// configurazione standard per la rappresentazione di un documento
-	// utilizzata nel caso manchi una specifica configurazione per la classe
+    'http://www.w3.org/2002/07/owl#sameas' : 'isSameAs',
+    'http://purl.org/dc/terms/ispartof' : 'isPartOf',
+    'http://purl.org/dc/elements/1.1/type' : 'isType',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' : 'isType'
+    // 'http://www.w3.org/1999/02/22-rdf-syntax-ns#subclassof' : 'issubclassof'
+  },
+  // uriSubstitutor : [{
+  //   findStr : 'mpii.de/yago/resource/',
+  //   replaceStr : 'yago-knowledge.org/resource/'
+  // }],
+  
+  // this is the default data configuration, this is important.  It informs LodLive how to construct queries and how to read the data that comes back
 	'default' : {
 		sparql : {
 			allClasses : 'SELECT DISTINCT ?object WHERE {[] a ?object}',
@@ -99,8 +97,8 @@ $.jStorage.set('profile', {
 			titleProperties : ['http://www.w3.org/ns/locn#fullAddress']
 		}
 	}
-
 });
+
 if (!document.lodliveVars) {
 	document.lodliveVars = {};
 }
@@ -116,7 +114,5 @@ $.jStorage.set('doDrawMap', $.jStorage.get('doDrawMap', true));
 $.jStorage.set('showInfoConsole', $.jStorage.get('showInfoConsole', true));
 
 $.jStorage.set('endpoints', {
-	all : 'output=json&format=application/json&timeout=0'//,
-	// arcSparql : 'output=json&jsonp=lodlive',
-	// sesame : 'Accept=application/sparql-results%2Bjson'
+  all : 'output=json&format=json&timeout=0'
 });

@@ -20,7 +20,6 @@ Once the containers are up and assuming that `localhost` is the reference host, 
  - LODE at http://localhost/app_en.html
  - LodView at http://localhost:8080/lodview
  - LodLive at http://localhost/app_en.html
- - WebVOWL at http://localhost:8080/webvowl
 
 #### Quick Examples:
 Here are some quick links to show how information about the element

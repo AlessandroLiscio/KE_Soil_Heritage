@@ -1,6 +1,5 @@
-ontologies/
+# ontologies/
 data/
-output.ttl
 .vscode/
 
 # Byte-compiled / optimized / DLL files

@@ -17,16 +17,15 @@ docker-compose build && docker-compose up
 ### Usage
 Once the containers are up and assuming that `localhost` is the reference host, users can access:
  - Virtuoso SPARQL endpoint at http://localhost:8890/sparql
- - LODE at http://localhost:9090/lode
  - LodView at http://localhost:8080/lodview
  - LodLive at http://localhost/app_en.html
+ - LODE at http://localhost:9090/lode/extract?url=https://raw.githubusercontent.com/AlessandroLiscio/KE_Soil_Heritage/main/src/baseline.owl?token=AJUQXPX4WSOR4QSPSXHLAT3BIMD2K#d4e23
 
 #### Quick Examples:
 Here are some quick links to show how information about the element
 "https://soilproject.org/onto/Indicatore" can be visualized using the browser:
 
  - Virtuoso: http://localhost:8890/sparql?query=select?p?o{%3Chttps://soilproject.org/onto/Indicatore%3E?p?o}
- - LODE: **not yet implemented**
  - LodView: http://localhost:8080/lodview/onto/Indicatore 
  - LodLive: http://localhost/app_en.html?https://soilproject.org/onto/Indicatore
 

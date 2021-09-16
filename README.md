@@ -17,7 +17,7 @@ docker-compose build && docker-compose up
 ### Usage
 Once the containers are up and assuming that `localhost` is the reference host, users can access:
  - Virtuoso SPARQL endpoint at http://localhost:8890/sparql
- - LODE at http://localhost/app_en.html
+ - LODE at http://localhost:9090/lode
  - LodView at http://localhost:8080/lodview
  - LodLive at http://localhost/app_en.html
 

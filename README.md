@@ -19,7 +19,7 @@ Once the containers are up and assuming that `localhost` is the reference host, 
  - Virtuoso SPARQL endpoint at http://localhost:8890/sparql
  - LodView at http://localhost:8080/lodview
  - LodLive at http://localhost/app_en.html
- - LODE at https://raw.githubusercontent.com/AlessandroLiscio/KE_Soil_Heritage/main/src/baseline.owl?token=AJUQXPXPZQYTR4B4TYHI7ADBIMJZM
+ - LODE at http://localhost:9090/lode/extract?url=https://raw.githubusercontent.com/AlessandroLiscio/KE_Soil_Heritage/main/src/baseline.owl?token=AJUQXPXPZQYTR4B4TYHI7ADBIMJZM
 
 #### Quick Examples:
 Here are some quick links to show how information about the element

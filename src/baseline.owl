@@ -46,6 +46,16 @@
     
 
 
+    <!-- https://w3id.org/stlab/ke/lifo/onto/hasLocation -->
+
+    <owl:ObjectProperty rdf:about="https://w3id.org/stlab/ke/lifo/onto/hasLocation">
+        <rdfs:range rdf:resource="https://w3id.org/stlab/ke/lifo/onto/Place"/>
+        <rdfs:label xml:lang="en">Location</rdfs:label>
+        <rdfs:label xml:lang="it">Luogo di riferimento</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
     <!-- https://w3id.org/stlab/ke/lifo/onto/hasPart -->
 
     <owl:ObjectProperty rdf:about="https://w3id.org/stlab/ke/lifo/onto/hasPart">

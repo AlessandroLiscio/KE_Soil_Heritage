@@ -336,7 +336,7 @@ for year in ['2012', '2015']:
                 # foaf:PrimaryTopic                                                     SBAGLIATO!
                 indicatorCollection_graph.add((
                     URIRef(sp_id.IndicatorsCollection + indicator_collection),
-                    FOAF.PrimaryTopic,
+                    lifo.hasLocation,
                     URIRef(sp_id.Region + "/" + name_refactored)
                 ))
 
@@ -345,7 +345,7 @@ for year in ['2012', '2015']:
                 # foaf:PrimaryTopic                                                     SBAGLIATO!
                 indicatorCollection_graph.add((
                     URIRef(sp_id.IndicatorsCollection + indicator_collection),
-                    FOAF.PrimaryTopic,
+                    lifo.hasLocation,
                     URIRef(sp_id.Province + "/" + name_refactored)
                 ))
 
@@ -354,7 +354,7 @@ for year in ['2012', '2015']:
                 # foaf:PrimaryTopic                                                     SBAGLIATO!
                 indicatorCollection_graph.add((
                     URIRef(sp_id.IndicatorsCollection + indicator_collection),
-                    FOAF.PrimaryTopic,
+                    lifo.hasLocation,
                     URIRef(sp_id.City + "/" + name_refactored)
                 ))
 
@@ -363,7 +363,7 @@ for year in ['2012', '2015']:
                 # foaf:PrimaryTopic                                                     SBAGLIATO!
                 indicatorCollection_graph.add((
                     URIRef(sp_id.IndicatorsCollection + indicator_collection),
-                    FOAF.PrimaryTopic,
+                    lifo.hasLocation,
                     URIRef(sp_id.Country + "/" + name_refactored)
                 ))
 
@@ -383,10 +383,17 @@ for year in ['2012', '2015']:
                 if metric == 'C7': continue;
 
                 ##################################
-                # PLACE-YEAR-INDICATOR ENTITIES #
+                # PLACE-YEAR METRIC #
                 ##################################
 
                 indicator_entity = f"/{SHORT}{code}_{year}_{metric.lower()}"
+
+                # rdfs:label
+                indicatorCollection_graph.add((
+                    URIRef(sp_id.Indicator + indicator_entity),
+                    RDF.type,
+                    lifo.Indicator
+                    ))
 
                 # rdfs:label
                 indicatorCollection_graph.add((
@@ -423,7 +430,7 @@ for year in ['2012', '2015']:
                     # foaf:PrimaryTopic                                                     SBAGLIATO!
                     indicatorCollection_graph.add((
                         URIRef(sp_id.Indicator + indicator_entity),
-                        FOAF.PrimaryTopic,
+                        lifo.hasLocation,
                         URIRef(sp_id.Region + "/" + name_refactored)
                     ))
 
@@ -432,7 +439,7 @@ for year in ['2012', '2015']:
                     # foaf:PrimaryTopic                                                     SBAGLIATO!
                     indicatorCollection_graph.add((
                         URIRef(sp_id.Indicator + indicator_entity),
-                        FOAF.PrimaryTopic,
+                        lifo.hasLocation,
                         URIRef(sp_id.Province + "/" + name_refactored)
                     ))
 
@@ -441,7 +448,7 @@ for year in ['2012', '2015']:
                     # foaf:PrimaryTopic                                                     SBAGLIATO!
                     indicatorCollection_graph.add((
                         URIRef(sp_id.Indicator + indicator_entity),
-                        FOAF.PrimaryTopic,
+                        lifo.hasLocation,
                         URIRef(sp_id.City + "/" + name_refactored)
                     ))
 
@@ -450,7 +457,7 @@ for year in ['2012', '2015']:
                     # foaf:PrimaryTopic                                                     SBAGLIATO!
                     indicatorCollection_graph.add((
                         URIRef(sp_id.Indicator + indicator_entity),
-                        FOAF.PrimaryTopic,
+                        lifo.hasLocation,
                         URIRef(sp_id.Country + "/" + name_refactored)
                     ))
                 

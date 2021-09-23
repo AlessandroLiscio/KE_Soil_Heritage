@@ -28,11 +28,11 @@ from rdflib.term import URIRef, Literal
 
 # Define useful prefixes
 PROTOCOL = 'https'
-DOMAIN = 'w3id.org/stlab/ke/lifo'
+DOMAIN = 'soilproject.org'
 ET_ONTOLOGY = 'onto'
 ET_ID = 'id'
 
-lifo = Namespace(f"{PROTOCOL}://{DOMAIN}/{ET_ONTOLOGY}/")
+sp_onto = Namespace(f"{PROTOCOL}://{DOMAIN}/{ET_ONTOLOGY}/")
 sp_id = Namespace(f"{PROTOCOL}://{DOMAIN}/{ET_ID}/")
 temp = Namespace(f"{PROTOCOL}://{DOMAIN}/temp/")
 
@@ -46,15 +46,15 @@ print(">>> Loading graph: baseline")
 protege_graph = Graph().parse('./data/baseline.owl')
 
 ###############################################################################
-############################# METRICS GRAPH ################################
+############################# INDICATORS GRAPH ################################
 ###############################################################################
 
-# Load metrics data
-metrics_data = pd.read_csv(os.path.join('data', 'Descrizione_campi.csv'),
+# Load indicators data
+indicators_data = pd.read_csv(os.path.join('data', 'Descrizione_campi.csv'),
                               sep=";")[6:].reset_index(drop=True)
 
 # Initialize indicators dictionary for mapping to the right classes in the baseline graph
-metrics_dict = {
+indicators_dict = {
     'IndicatoreConsumoSuolo' : {
         'ids' : [1,2,3,4,5,6],
         'params': [],
@@ -125,149 +125,65 @@ metrics_dict = {
     }
 }
 
-# Create indicators graph 
-metrics_graph = Graph()
+# Create indicators graph
+indicators_graph = Graph()
 
-print(">>> Creating graph: indicators")   # these become metrics
-for i, row in metrics_data.iterrows():
+print(">>> Creating graph: indicators")
+for i, row in indicators_data.iterrows():
     
     # Store fields in variables
-    metric_id = row['Campo_ID'].lower()
-    metric_name = row['Campo'].replace('_', ' ')
-    metric_descr = row['Descrizione']
+    indicator_id = row['Campo_ID'].lower()
+    indicator_name = row['Campo'].replace('_', ' ')
+    indicator_descr = row['Descrizione']
 
     # Find the indicator class by looking into the vocabulary
-    for key in metrics_dict:
-        if (i+1) in metrics_dict[key]['ids']:
-            metric_class = key
+    for key in indicators_dict:
+        if (i+1) in indicators_dict[key]['ids']:
+            indicator_class = key
             break
 
    # rdf:type
-    metrics_graph.add((
-        URIRef(sp_id.Metric +"/"+ metric_id),
+    indicators_graph.add((
+        URIRef(sp_id.Indicatore +"/"+ indicator_id),
         RDF.type,
-        URIRef(lifo.Metric)
+        URIRef(sp_onto + indicator_class)
     ))
     # rdfs:label
-    metrics_graph.add((
-        URIRef(sp_id.Metric +"/"+ metric_id),
+    indicators_graph.add((
+        URIRef(sp_id.Indicatore +"/"+ indicator_id),
         RDFS.label,
-        Literal(metric_name)
+        Literal(indicator_name)
     ))
     # rdfs:comment
-    metrics_graph.add((
-        URIRef(sp_id.Metric +"/"+ metric_id),
+    indicators_graph.add((
+        URIRef(sp_id.Indicatore +"/"+ indicator_id),
         RDFS.comment,
-        Literal(metric_descr)
+        Literal(indicator_descr)
     ))
     # temp:identificatore
-    metrics_graph.add((
-        URIRef(sp_id.Metric +"/"+ metric_id),
-        lifo.MetricIdentifier,
-        Literal(metric_id)
+    indicators_graph.add((
+        URIRef(sp_id.Indicatore +"/"+ indicator_id),
+        URIRef(temp + "/identificatore"),
+        Literal(indicator_id)
     ))
     # temp:metrica
-    indicator_metric = re.search('\[(.*?)\]', metric_descr)
+    indicator_metric = re.search('\[(.*?)\]', indicator_descr)
     if indicator_metric is not None:
-        metrics_graph.add((
-            URIRef(sp_id.Metric + "/" + metric_id),
-            lifo.hasUnitMeasure,
+        indicators_graph.add((
+            URIRef(sp_id.Indicatore + "/" + indicator_id),
+            URIRef(temp + "/metrica"),
             Literal(indicator_metric.group(0))
         ))
-"""     # Indicator parameters
-    for j, param in enumerate(metrics_dict[metric_class]['params']):
+    # Indicator parameters
+    for j, param in enumerate(indicators_dict[indicator_class]['params']):
         # Find the indicator parameter value by using a regex
-        param_value = re.search(metrics_dict[key]['params_regex'][j], metric_name)
+        param_value = re.search(indicators_dict[key]['params_regex'][j], indicator_name)
         if param_value is not None:
-            metrics_graph.add((
-                URIRef(sp_id.Metric + "/" + metric_id),
+            indicators_graph.add((
+                URIRef(sp_id.Indicatore + "/" + indicator_id),
                 URIRef(temp + "/" + param.replace(' ','_')),
                 Literal(param_value.group(0).replace('_',' '))
-            )) """
-
-###############################################################################
-####################### PLACES GRAPH ############################
-###############################################################################
-
-# Create indicatorCollection graph
-places_graph = Graph()
-
-places_graph.add((
-    URIRef(sp_id.Country + "/italy"),
-    RDF.type,
-    URIRef(lifo.Country)
-))
-
-places_graph.add((
-    URIRef(sp_id.Country + "/italy"),
-    RDFS.label,
-    Literal("Nazione Italia")
-))
-
-
-
-for place in ['Regioni', 'Province', 'Comuni']:
-    data = pd.read_csv(os.path.join('data', f'{place}_2015.csv'), 
-        sep=";", encoding='latin1') #encoding_errors='ignore')
-    for i, row in data.iterrows():
-        # Store place code and name
-        if place == 'Regioni':
-            SHORT = 'REG'
-            LONG = 'La regione'
-            code = row['COD_REG']
-            name = row['NOME_Regione'].replace(' ','-').lower()
-
-            places_graph.add((
-                URIRef(sp_id.Region + "/" + name),
-                RDF.type,
-                URIRef(lifo.Region)
             ))
-
-            places_graph.add((
-                URIRef(sp_id.Region + "/" + name),
-                RDFS.label,
-                Literal(f"{LONG} {name}")
-            ))
-
-
-
-        elif place == 'Province':
-            SHORT = 'PRO'
-            LONG = 'La provincia di'
-            code = row['COD_PRO']
-            name = row['NOME_Provincia'].replace(' ','-').lower()
-
-            places_graph.add((
-                URIRef(sp_id.Province + "/" + name),
-                RDF.type,
-                URIRef(lifo.Province)
-            ))
-
-            places_graph.add((
-                URIRef(sp_id.Province + "/" + name),
-                RDFS.label,
-                Literal(f"{LONG} {name}")
-            ))
-
-        else:
-            SHORT = 'COM'
-            LONG = 'Il comune di'
-            code = row['PRO_COM']
-            name = row['NOME_Comune'].replace(' ','-').lower()
-
-            places_graph.add((
-                URIRef(sp_id.City + "/" + name),
-                RDF.type,
-                URIRef(lifo.City)
-            ))
-
-            places_graph.add((
-                URIRef(sp_id.City + "/" + name),
-                RDFS.label,
-                Literal(f"{LONG} {name}")
-            ))
-        
-
 
 ###############################################################################
 ####################### INDICATOR_COLLECITON GRAPH ############################
@@ -278,9 +194,9 @@ indicatorCollection_graph = Graph()
 
 print(">>> Creating graph: indicatorCollection")
 for year in ['2012', '2015']:
-    for place in ['Regioni', 'Nazionale']:
+    for place in ['Regioni']:
     # for place in ['Regioni', 'Province']:
-    # for place in ['Regioni', 'Province', 'Comuni', 'Nazionale']: # -> CAREFUL: 'Comuni' files are VERY big!
+    # for place in ['Regioni', 'Province', 'Comuni']: # -> CAREFUL: 'Comuni' files are VERY big!
 
         # Load Data
         print(f'>>>>>> Working to {place} {year}')
@@ -301,16 +217,11 @@ for year in ['2012', '2015']:
                 LONG = 'la provincia di'
                 code = row['COD_PRO']
                 name = row['NOME_Provincia']
-            elif place == 'Comuni':
+            else:
                 SHORT = 'COM'
                 LONG = 'il comune di'
                 code = row['PRO_COM']
                 name = row['NOME_Comune']
-            else:
-                SHORT = 'ITA'
-                LONG = 'la nazione'
-                code = ''
-                name = row['Nazione']
             name_refactored = name.replace(' ','-').lower()
 
             ##########################
@@ -321,142 +232,81 @@ for year in ['2012', '2015']:
 
             # rdfs:type
             indicatorCollection_graph.add((
-                URIRef(sp_id.IndicatorsCollection + indicator_collection),
+                URIRef(sp_id.CollezioneIndicatori + indicator_collection),
                 RDF.type,
-                URIRef(lifo.IndicatorsCollection)
+                URIRef(sp_onto.CollezioneIndicatori)
                 ))
             # rdfs:label
             indicatorCollection_graph.add((
-                URIRef(sp_id.IndicatorsCollection + indicator_collection),
+                URIRef(sp_id.CollezioneIndicatori + indicator_collection),
                 RDFS.label,
                 Literal(f"Consumo del suolo per {LONG} {name} nell'anno {year}")
                 ))
-
-            if place == 'Regioni':
-                # foaf:PrimaryTopic                                                     SBAGLIATO!
-                indicatorCollection_graph.add((
-                    URIRef(sp_id.IndicatorsCollection + indicator_collection),
-                    FOAF.PrimaryTopic,
-                    URIRef(sp_id.Region + "/" + name_refactored)
-                ))
-
-            
-            elif place == 'Province':
-                # foaf:PrimaryTopic                                                     SBAGLIATO!
-                indicatorCollection_graph.add((
-                    URIRef(sp_id.IndicatorsCollection + indicator_collection),
-                    FOAF.PrimaryTopic,
-                    URIRef(sp_id.Province + "/" + name_refactored)
-                ))
-
-
-            elif place == 'Comuni':
-                # foaf:PrimaryTopic                                                     SBAGLIATO!
-                indicatorCollection_graph.add((
-                    URIRef(sp_id.IndicatorsCollection + indicator_collection),
-                    FOAF.PrimaryTopic,
-                    URIRef(sp_id.City + "/" + name_refactored)
-                ))
-
-            
-            else:
-                # foaf:PrimaryTopic                                                     SBAGLIATO!
-                indicatorCollection_graph.add((
-                    URIRef(sp_id.IndicatorsCollection + indicator_collection),
-                    FOAF.PrimaryTopic,
-                    URIRef(sp_id.Country + "/" + name_refactored)
-                ))
-
-            
-            # dc:date                                                     SBAGLIATO!
+            # foaf:PrimaryTopic
             indicatorCollection_graph.add((
-                URIRef(sp_id.IndicatorsCollection + indicator_collection),
+                URIRef(sp_id.CollezioneIndicatori + indicator_collection),
+                FOAF.PrimaryTopic,
+                URIRef(sp_onto.Luogo + "/" + name_refactored)
+                ))
+            # dc:date
+            indicatorCollection_graph.add((
+                URIRef(sp_id.CollezioneIndicatori + indicator_collection),
                 DC.date,
                 Literal(year)
                 ))
 
-            for metric in metrics_data['Campo_ID']:
+            for indicator in indicators_data['Campo_ID']:
 
                 # Avoid 'C7' indicator:
                 # - Regioni -> C7_RM_1956;C7_RM_1989;C7_RM_1998;C7_RM_2008;C7_RM_2013
                 # - Comuni e Province -> Does not exist
-                if metric == 'C7': continue;
+                if indicator == 'C7': continue;
 
                 ##################################
                 # PLACE-YEAR-INDICATOR ENTITIES #
                 ##################################
 
-                indicator_entity = f"/{SHORT}{code}_{year}_{metric.lower()}"
+                indicator_entity = f"/{SHORT}{code}_{year}_{indicator.lower()}"
 
                 # rdfs:label
                 indicatorCollection_graph.add((
-                    URIRef(sp_id.Indicator + indicator_entity),
+                    URIRef(sp_id.Indicatore + indicator_entity),
                     RDFS.label,
-                    Literal(indicator_collection[1:] + f"_{metric}")
+                    Literal(indicator_collection[1:] + f"_{indicator}")
                     ))
                 # dc:type
                 indicatorCollection_graph.add((
-                    URIRef(sp_id.Indicator + indicator_entity),
-                    lifo.measuredBy,
-                    URIRef(sp_id + "Metric/" + metric.lower())
+                    URIRef(sp_id.Indicatore + indicator_entity),
+                    DC.type,
+                    URIRef(temp + "/" + indicator.lower())
                     ))
                 # rdfs:comment
                 indicatorCollection_graph.add((
-                    URIRef(sp_id.Indicator + indicator_entity),
+                    URIRef(sp_id.Indicatore + indicator_entity),
                     RDFS.comment,
-                    Literal(f"{metrics_data[metrics_data['Campo_ID'] == metric]['Descrizione'].to_list()[0]} per {name} nell'anno {year}")
+                    Literal(f"{indicators_data[indicators_data['Campo_ID'] == indicator]['Descrizione'].to_list()[0]} per {name} nell'anno {year}")
                     ))
                 # dc:isPartOf
                 indicatorCollection_graph.add((
-                    URIRef(sp_id.Indicator + indicator_entity),
-                    lifo.isPartOf,
-                    URIRef(sp_id.IndicatorsCollection + indicator_collection)
+                    URIRef(sp_id.Indicatore + indicator_entity),
+                    DC.isPartOf,
+                    URIRef(sp_id.CollezioneIndicatori + indicator_collection)
                     ))
                 # rdf:value
                 indicatorCollection_graph.add((
-                    URIRef(sp_id.Indicator + indicator_entity),
+                    URIRef(sp_id.Indicatore + indicator_entity),
                     RDF.value,
-                    Literal(row[metric])
+                    Literal(row[indicator])
                     ))
-                
-                if place == 'Regioni':
-                    # foaf:PrimaryTopic                                                     SBAGLIATO!
-                    indicatorCollection_graph.add((
-                        URIRef(sp_id.Indicator + indicator_entity),
-                        FOAF.PrimaryTopic,
-                        URIRef(sp_id.Region + "/" + name_refactored)
+                # foaf:PrimaryTopic
+                indicatorCollection_graph.add((
+                    URIRef(sp_id.Indicatore + indicator_entity),
+                    FOAF.PrimaryTopic,
+                    URIRef(sp_onto.Luogo + "/" + name_refactored)
                     ))
-
-                
-                elif place == 'Province':
-                    # foaf:PrimaryTopic                                                     SBAGLIATO!
-                    indicatorCollection_graph.add((
-                        URIRef(sp_id.Indicator + indicator_entity),
-                        FOAF.PrimaryTopic,
-                        URIRef(sp_id.Province + "/" + name_refactored)
-                    ))
-
-
-                elif place == 'Comuni':
-                    # foaf:PrimaryTopic                                                     SBAGLIATO!
-                    indicatorCollection_graph.add((
-                        URIRef(sp_id.Indicator + indicator_entity),
-                        FOAF.PrimaryTopic,
-                        URIRef(sp_id.City + "/" + name_refactored)
-                    ))
-
-                
-                else:
-                    # foaf:PrimaryTopic                                                     SBAGLIATO!
-                    indicatorCollection_graph.add((
-                        URIRef(sp_id.Indicator + indicator_entity),
-                        FOAF.PrimaryTopic,
-                        URIRef(sp_id.Country + "/" + name_refactored)
-                    ))
-                
                 # dc:date
                 indicatorCollection_graph.add((
-                    URIRef(sp_id.Indicator + indicator_entity),
+                    URIRef(sp_id.Indicatore + indicator_entity),
                     DC.date,
                     Literal(year)
                     ))
@@ -467,16 +317,16 @@ for year in ['2012', '2015']:
 ###############################################################################
 
 # Merge graphs
-final_graph = protege_graph + places_graph + metrics_graph + indicatorCollection_graph
-final_graph.bind("lifo", lifo)
-#final_graph.bind("sp-id", sp_id)
+final_graph = protege_graph  + indicators_graph + indicatorCollection_graph
+final_graph.bind("sp-onto", sp_onto)
+final_graph.bind("sp-id", sp_id)
 final_graph.bind("rdf", RDF)
 final_graph.bind("rdfs", RDFS)
 final_graph.bind("foaf", FOAF)
 final_graph.bind("dc", DC)
 print("######################################################################")
 print(">>> protege graph statements: {}".format(len(protege_graph)))
-print(">>> indicators graph statements: {}".format(len(metrics_graph)))
+print(">>> indicators graph statements: {}".format(len(indicators_graph)))
 print(">>> indicatorCollection graph statements: {}".format(len(indicatorCollection_graph)))
 print(">>>>>> final graph statements: {}".format(len(final_graph)))
 print("######################################################################")
@@ -484,3 +334,13 @@ print("######################################################################")
 # Serialize graph to .ttl files
 if not os.path.isdir('./ontologies'): os.mkdir('./ontologies')
 final_graph.serialize(destination='./ontologies/final_graph.ttl', format='turtle')
+
+###############################################################################
+############################# EXAMPLE QUERY ###################################
+###############################################################################
+
+# QUERY = "SELECT DISTINCT ?s WHERE { ?s ?p ?o }"
+# qres = final_graph.query(QUERY)
+# print(">>> Query: ", QUERY)
+# for row in qres: print("%s" % row)
+# print("######################################################################")

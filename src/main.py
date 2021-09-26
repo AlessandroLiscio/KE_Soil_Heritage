@@ -3,7 +3,7 @@ import os
 import re
 
 from rdflib import Graph, Namespace
-from rdflib.namespace import RDF, RDFS, SKOS, FOAF, DC
+from rdflib.namespace import RDF, RDFS, DC
 from rdflib.term import URIRef, Literal
 
 ###############################################################################
@@ -201,7 +201,7 @@ places_graph.add((
 places_graph.add((
     URIRef(sp_id.Country + "/italy"),
     RDFS.label,
-    Literal("Nazione Italia")
+    Literal("Italia")
 ))
 
 
@@ -226,7 +226,7 @@ for place in ['Regioni', 'Province', 'Comuni']:
             places_graph.add((
                 URIRef(sp_id.Region + "/" + name),
                 RDFS.label,
-                Literal(f"{LONG} {name}")
+                Literal(f"{name}")
             ))
 
 
@@ -246,7 +246,7 @@ for place in ['Regioni', 'Province', 'Comuni']:
             places_graph.add((
                 URIRef(sp_id.Province + "/" + name),
                 RDFS.label,
-                Literal(f"{LONG} {name}")
+                Literal(f"{name}")
             ))
 
         else:
@@ -264,7 +264,7 @@ for place in ['Regioni', 'Province', 'Comuni']:
             places_graph.add((
                 URIRef(sp_id.City + "/" + name),
                 RDFS.label,
-                Literal(f"{LONG} {name}")
+                Literal(f"{name}")
             ))
         
 
@@ -479,7 +479,6 @@ final_graph.bind("lifo", lifo)
 #final_graph.bind("sp-id", sp_id)
 final_graph.bind("rdf", RDF)
 final_graph.bind("rdfs", RDFS)
-final_graph.bind("foaf", FOAF)
 final_graph.bind("dc", DC)
 print("######################################################################")
 print(">>> protege graph statements: {}".format(len(protege_graph)))

@@ -1,11 +1,12 @@
 # KE_Soil_Heritage
-Analysing indicators of soil consumption in Italy in order to understand and constructing a knowledge graph.
+Analysing indicators of soil consumption in Italy in order to understand and construct ontologies and build 
+a knowledge graph following standards given by design patterns.
  
 This projects provides the following facilities for enhancing user experience: 
  - Virtuoso as SPARQL enpoint;
  - LODE for visualising ontologies as HTML;
  - LodView for browsing ontology entities as well as controlloed vocabularies entities.
- - LodLive for visualising ontologies with the effectiveness of data graph representation;
+ - LodLive and WebVOWL for visualising ontologies with the effectiveness of data graph representation;
 
 ### With Docker
 The project relies on Docker. To build and run the containers, navigate to the
@@ -19,15 +20,16 @@ Once the containers are up and assuming that `localhost` is the reference host, 
  - Virtuoso SPARQL endpoint at http://localhost:8890/sparql
  - LodView at http://localhost:8080/lodview
  - LodLive at http://localhost/app_en.html
- - LODE at http://localhost:9090/lode/extract?url=https://raw.githubusercontent.com/AlessandroLiscio/KE_Soil_Heritage/main/src/baseline.owl?token=AJUQXPXPZQYTR4B4TYHI7ADBIMJZM
+ - LODE at http://localhost:9090/lode
+ - WebVOWL at http://localhost:8080/webvowl
 
 #### Quick Examples:
 Here are some quick links to show how information about the element
-"https://soilproject.org/onto/Indicatore" can be visualized using the browser:
+"https://w3id.org/stlab/ke/lifo/onto/Indicator" can be visualized using the browser:
 
- - Virtuoso: http://localhost:8890/sparql?query=select?p?o{%3Chttps://soilproject.org/onto/Indicatore%3E?p?o}
- - LodView: http://localhost:8080/lodview/onto/Indicatore 
- - LodLive: http://localhost/app_en.html?https://soilproject.org/onto/Indicatore
+ - Virtuoso: http://localhost:8890/sparql?query=select?p?o{%3Chttps://w3id.org/stlab/ke/lifo/onto/Indicator%3E?p?o}
+ - LodView:  http://localhost:8080/lodview/onto/Indicator
+ - LodLive:  http://localhost/app_en.html?https://w3id.org/stlab/ke/lifo/onto/Indicator
 
 ## Without Docker 
 The ontologies files can still be created without using Docker by following the next steps.

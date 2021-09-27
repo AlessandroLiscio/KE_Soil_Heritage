@@ -33,8 +33,7 @@ ET_ONTOLOGY = 'onto'
 ET_ID = 'id'
 
 lifo = Namespace(f"{PROTOCOL}://{DOMAIN}/{ET_ONTOLOGY}/")
-sp_id = Namespace(f"{PROTOCOL}://{DOMAIN}/{ET_ID}/")
-temp = Namespace(f"{PROTOCOL}://{DOMAIN}/temp/")
+lifo_id = Namespace(f"{PROTOCOL}://{DOMAIN}/{ET_ID}/")
 
 ###############################################################################
 ############################# BASELINE GRAPH ##################################
@@ -144,133 +143,108 @@ for i, row in metrics_data.iterrows():
 
    # rdf:type
     metrics_graph.add((
-        URIRef(sp_id.Metric +"/"+ metric_id),
+        URIRef(lifo_id.Metric +"/"+ metric_id),
         RDF.type,
         URIRef(lifo.Metric)
     ))
     # rdfs:label
     metrics_graph.add((
-        URIRef(sp_id.Metric +"/"+ metric_id),
+        URIRef(lifo_id.Metric +"/"+ metric_id),
         RDFS.label,
         Literal(metric_name)
     ))
     # rdfs:comment
     metrics_graph.add((
-        URIRef(sp_id.Metric +"/"+ metric_id),
+        URIRef(lifo_id.Metric +"/"+ metric_id),
         RDFS.comment,
         Literal(metric_descr)
     ))
-    # temp:identificatore
+    # lifo:MetricIdentifier
     metrics_graph.add((
-        URIRef(sp_id.Metric +"/"+ metric_id),
+        URIRef(lifo_id.Metric +"/"+ metric_id),
         lifo.MetricIdentifier,
         Literal(metric_id)
     ))
-    # temp:metrica
+    # lifo:hasUnitMeasure
     indicator_metric = re.search('\[(.*?)\]', metric_descr)
     if indicator_metric is not None:
         metrics_graph.add((
-            URIRef(sp_id.Metric + "/" + metric_id),
+            URIRef(lifo_id.Metric + "/" + metric_id),
             lifo.hasUnitMeasure,
             Literal(indicator_metric.group(0))
         ))
-"""     # Indicator parameters
-    for j, param in enumerate(metrics_dict[metric_class]['params']):
-        # Find the indicator parameter value by using a regex
-        param_value = re.search(metrics_dict[key]['params_regex'][j], metric_name)
-        if param_value is not None:
-            metrics_graph.add((
-                URIRef(sp_id.Metric + "/" + metric_id),
-                URIRef(temp + "/" + param.replace(' ','_')),
-                Literal(param_value.group(0).replace('_',' '))
-            )) """
 
 ###############################################################################
-####################### PLACES GRAPH ############################
+############################### PLACES GRAPH ##################################
 ###############################################################################
 
-# Create indicatorCollection graph
+# Create places graph
 places_graph = Graph()
 
+## Add Italy as country
+# rdf:type
 places_graph.add((
-    URIRef(sp_id.Country + "/italy"),
+    URIRef(lifo_id.Country + "/italy"),
     RDF.type,
     URIRef(lifo.Country)
 ))
-
+# rdfs:label
 places_graph.add((
-    URIRef(sp_id.Country + "/italy"),
+    URIRef(lifo_id.Country + "/italy"),
     RDFS.label,
     Literal("Italia")
 ))
 
-
-
+# Populate places graph
 for place in ['Regioni', 'Province', 'Comuni']:
-    data = pd.read_csv(os.path.join('data', f'{place}_2015.csv'), 
-        sep=";", encoding='latin1') #encoding_errors='ignore')
+
+    # Load data
+    data = pd.read_csv(os.path.join('data', f'{place}_2015.csv'),
+        sep=";", encoding='latin1')
+
+    # Iterate
     for i, row in data.iterrows():
+
         # Store place code and name
         if place == 'Regioni':
             SHORT = 'REG'
             LONG = 'La regione'
             code = row['COD_REG']
-            name = row['NOME_Regione'].replace(' ','-').lower()
-
-            places_graph.add((
-                URIRef(sp_id.Region + "/" + name),
-                RDF.type,
-                URIRef(lifo.Region)
-            ))
-
-            places_graph.add((
-                URIRef(sp_id.Region + "/" + name),
-                RDFS.label,
-                Literal(f"{name}")
-            ))
-
-
-
+            name = row['NOME_Regione']
+            prefix_id = lifo_id.Region
+            prefix_onto = lifo.Region
         elif place == 'Province':
             SHORT = 'PRO'
             LONG = 'La provincia di'
             code = row['COD_PRO']
-            name = row['NOME_Provincia'].replace(' ','-').lower()
-
-            places_graph.add((
-                URIRef(sp_id.Province + "/" + name),
-                RDF.type,
-                URIRef(lifo.Province)
-            ))
-
-            places_graph.add((
-                URIRef(sp_id.Province + "/" + name),
-                RDFS.label,
-                Literal(f"{name}")
-            ))
-
+            name = row['NOME_Provincia']
+            prefix_id = lifo_id.Province
+            prefix_onto = lifo.Province
         else:
             SHORT = 'COM'
             LONG = 'Il comune di'
             code = row['PRO_COM']
-            name = row['NOME_Comune'].replace(' ','-').lower()
+            name = row['NOME_Comune']
+            prefix_id = lifo_id.City
+            prefix_onto = lifo.City
+        name = name.replace(' ', '-').lower()
 
-            places_graph.add((
-                URIRef(sp_id.City + "/" + name),
-                RDF.type,
-                URIRef(lifo.City)
-            ))
-
-            places_graph.add((
-                URIRef(sp_id.City + "/" + name),
-                RDFS.label,
-                Literal(f"{name}")
-            ))
+        # rdf:type
+        places_graph.add((
+            URIRef(prefix_id + "/" + name),
+            RDF.type,
+            URIRef(prefix_onto)
+        ))
         
-
+        # rdfs:label
+        places_graph.add((
+            URIRef(prefix_id + "/" + name),
+            RDFS.label,
+            Literal(f"{name}")
+        ))
 
 ###############################################################################
-####################### INDICATOR_COLLECITON GRAPH ############################
+####################### INDICATOR_COLLECTION GRAPH ############################
 ###############################################################################
 
 # Create indicatorCollection graph
@@ -293,84 +267,64 @@ for year in ['2012', '2015']:
             # Store place code and name
             if place == 'Regioni':
                 SHORT = 'REG'
-                LONG = 'la regione'
+                LONG = 'La regione'
                 code = row['COD_REG']
                 name = row['NOME_Regione']
+                prefix_id = lifo_id.Region
+                prefix_onto = lifo.Region
             elif place == 'Province':
                 SHORT = 'PRO'
-                LONG = 'la provincia di'
+                LONG = 'La provincia di'
                 code = row['COD_PRO']
                 name = row['NOME_Provincia']
+                prefix_id = lifo_id.Province
+                prefix_onto = lifo.Province
             elif place == 'Comuni':
                 SHORT = 'COM'
-                LONG = 'il comune di'
+                LONG = 'Il comune di'
                 code = row['PRO_COM']
                 name = row['NOME_Comune']
+                prefix_id = lifo_id.City
+                prefix_onto = lifo.City
             else:
                 SHORT = 'ITA'
                 LONG = 'la nazione'
                 code = ''
                 name = row['Nazione']
-            name_refactored = name.replace(' ','-').lower()
+                prefix_id = lifo_id.Country
+                prefix_onto = lifo.Country
+
+            name = name.replace(' ', '-').lower()
 
             ##########################
             # PLACE-YEAR COLLECTIONS #
             ##########################
 
+            # store indicator_collection suffix
             indicator_collection = f"/{SHORT}{code}_{year}"
 
             # rdfs:type
             indicatorCollection_graph.add((
-                URIRef(sp_id.IndicatorsCollection + indicator_collection),
+                URIRef(lifo_id.IndicatorsCollection + indicator_collection),
                 RDF.type,
                 URIRef(lifo.IndicatorsCollection)
                 ))
             # rdfs:label
             indicatorCollection_graph.add((
-                URIRef(sp_id.IndicatorsCollection + indicator_collection),
+                URIRef(lifo_id.IndicatorsCollection + indicator_collection),
                 RDFS.label,
                 Literal(f"Consumo del suolo per {LONG} {name} nell'anno {year}")
                 ))
 
-            if place == 'Regioni':
-                # foaf:PrimaryTopic                                                     SBAGLIATO!
-                indicatorCollection_graph.add((
-                    URIRef(sp_id.IndicatorsCollection + indicator_collection),
-                    lifo.hasLocation,
-                    URIRef(sp_id.Region + "/" + name_refactored)
-                ))
-
-            
-            elif place == 'Province':
-                # foaf:PrimaryTopic                                                     SBAGLIATO!
-                indicatorCollection_graph.add((
-                    URIRef(sp_id.IndicatorsCollection + indicator_collection),
-                    lifo.hasLocation,
-                    URIRef(sp_id.Province + "/" + name_refactored)
-                ))
-
-
-            elif place == 'Comuni':
-                # foaf:PrimaryTopic                                                     SBAGLIATO!
-                indicatorCollection_graph.add((
-                    URIRef(sp_id.IndicatorsCollection + indicator_collection),
-                    lifo.hasLocation,
-                    URIRef(sp_id.City + "/" + name_refactored)
-                ))
-
-            
-            else:
-                # foaf:PrimaryTopic                                                     SBAGLIATO!
-                indicatorCollection_graph.add((
-                    URIRef(sp_id.IndicatorsCollection + indicator_collection),
-                    lifo.hasLocation,
-                    URIRef(sp_id.Country + "/" + name_refactored)
-                ))
-
-            
-            # dc:date                                                     SBAGLIATO!
+            # lifo:hasLocation
             indicatorCollection_graph.add((
-                URIRef(sp_id.IndicatorsCollection + indicator_collection),
+                URIRef(lifo_id.IndicatorsCollection + indicator_collection),
+                lifo.hasLocation,
+                URIRef(prefix_id + "/" + name)
+            ))
+            # dc:date
+            indicatorCollection_graph.add((
+                URIRef(lifo_id.IndicatorsCollection + indicator_collection),
                 DC.date,
                 Literal(year)
                 ))
@@ -390,84 +344,53 @@ for year in ['2012', '2015']:
 
                 # rdfs:label
                 indicatorCollection_graph.add((
-                    URIRef(sp_id.Indicator + indicator_entity),
+                    URIRef(lifo_id.Indicator + indicator_entity),
                     RDF.type,
                     lifo.Indicator
                     ))
 
                 # rdfs:label
                 indicatorCollection_graph.add((
-                    URIRef(sp_id.Indicator + indicator_entity),
+                    URIRef(lifo_id.Indicator + indicator_entity),
                     RDFS.label,
                     Literal(indicator_collection[1:] + f"_{metric}")
                     ))
-                # dc:type
+                # lifo:measuredBy
                 indicatorCollection_graph.add((
-                    URIRef(sp_id.Indicator + indicator_entity),
+                    URIRef(lifo_id.Indicator + indicator_entity),
                     lifo.measuredBy,
-                    URIRef(sp_id + "Metric/" + metric.lower())
+                    URIRef(lifo_id + "Metric/" + metric.lower())
                     ))
                 # rdfs:comment
                 indicatorCollection_graph.add((
-                    URIRef(sp_id.Indicator + indicator_entity),
+                    URIRef(lifo_id.Indicator + indicator_entity),
                     RDFS.comment,
                     Literal(f"{metrics_data[metrics_data['Campo_ID'] == metric]['Descrizione'].to_list()[0]} per {name} nell'anno {year}")
                     ))
-                # dc:isPartOf
+                # lifo:isPartOf
                 indicatorCollection_graph.add((
-                    URIRef(sp_id.Indicator + indicator_entity),
+                    URIRef(lifo_id.Indicator + indicator_entity),
                     lifo.isPartOf,
-                    URIRef(sp_id.IndicatorsCollection + indicator_collection)
+                    URIRef(lifo_id.IndicatorsCollection + indicator_collection)
                     ))
                 # rdf:value
                 indicatorCollection_graph.add((
-                    URIRef(sp_id.Indicator + indicator_entity),
+                    URIRef(lifo_id.Indicator + indicator_entity),
                     RDF.value,
                     Literal(row[metric])
                     ))
-                
-                if place == 'Regioni':
-                    # foaf:PrimaryTopic                                                     SBAGLIATO!
-                    indicatorCollection_graph.add((
-                        URIRef(sp_id.Indicator + indicator_entity),
-                        lifo.hasLocation,
-                        URIRef(sp_id.Region + "/" + name_refactored)
-                    ))
-
-                
-                elif place == 'Province':
-                    # foaf:PrimaryTopic                                                     SBAGLIATO!
-                    indicatorCollection_graph.add((
-                        URIRef(sp_id.Indicator + indicator_entity),
-                        lifo.hasLocation,
-                        URIRef(sp_id.Province + "/" + name_refactored)
-                    ))
-
-
-                elif place == 'Comuni':
-                    # foaf:PrimaryTopic                                                     SBAGLIATO!
-                    indicatorCollection_graph.add((
-                        URIRef(sp_id.Indicator + indicator_entity),
-                        lifo.hasLocation,
-                        URIRef(sp_id.City + "/" + name_refactored)
-                    ))
-
-                
-                else:
-                    # foaf:PrimaryTopic                                                     SBAGLIATO!
-                    indicatorCollection_graph.add((
-                        URIRef(sp_id.Indicator + indicator_entity),
-                        lifo.hasLocation,
-                        URIRef(sp_id.Country + "/" + name_refactored)
-                    ))
-                
+                # lifo:hasLocation
+                indicatorCollection_graph.add((
+                    URIRef(lifo_id.Indicator + indicator_entity),
+                    lifo.hasLocation,
+                    URIRef(prefix_id + "/" + name)
+                ))
                 # dc:date
                 indicatorCollection_graph.add((
-                    URIRef(sp_id.Indicator + indicator_entity),
+                    URIRef(lifo_id.Indicator + indicator_entity),
                     DC.date,
                     Literal(year)
                     ))
-
 
 ###############################################################################
 ################################ OUTPUT #######################################
@@ -476,7 +399,7 @@ for year in ['2012', '2015']:
 # Merge graphs
 final_graph = protege_graph + places_graph + metrics_graph + indicatorCollection_graph
 final_graph.bind("lifo", lifo)
-#final_graph.bind("sp-id", sp_id)
+# final_graph.bind("lifo-id", lifo_id)
 final_graph.bind("rdf", RDF)
 final_graph.bind("rdfs", RDFS)
 final_graph.bind("dc", DC)

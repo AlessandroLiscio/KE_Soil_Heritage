@@ -17,6 +17,9 @@ $.jStorage.set(
 				label: 'Indicatore',
 				uri: 'https://w3id.org/stlab/ke/lifo/onto/Indicator'
 			}, {
+				label: 'Metrica',
+				uri: 'https://w3id.org/stlab/ke/lifo/onto/Metric'
+			}, {
 				label: 'CollezioneIndicatori',
 				uri: 'https://w3id.org/stlab/ke/lifo/onto/IndicatorsCollection'
 			}, {

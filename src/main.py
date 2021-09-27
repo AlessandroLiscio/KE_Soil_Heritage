@@ -1,9 +1,9 @@
-import pandas as pd
 import os
 import re
+import pandas as pd
 
 from rdflib import Graph, Namespace
-from rdflib.namespace import RDF, RDFS, DC
+from rdflib.namespace import RDF, RDFS, DC, OWL
 from rdflib.term import URIRef, Literal
 
 ###############################################################################
@@ -124,12 +124,12 @@ metrics_dict = {
     }
 }
 
-# Create indicators graph 
+# Create indicators graph
 metrics_graph = Graph()
 
-print(">>> Creating graph: indicators")   # these become metrics
+print(">>> Creating graph: metrics")
 for i, row in metrics_data.iterrows():
-    
+
     # Store fields in variables
     metric_id = row['Campo_ID'].lower()
     metric_name = row['Campo'].replace('_', ' ')
@@ -137,7 +137,7 @@ for i, row in metrics_data.iterrows():
 
     # Find the indicator class by looking into the vocabulary
     for key in metrics_dict:
-        if (i+1) in metrics_dict[key]['ids']:
+        if i+1 in metrics_dict[key]['ids']:
             metric_class = key
             break
 
@@ -180,6 +180,7 @@ for i, row in metrics_data.iterrows():
 
 # Create places graph
 places_graph = Graph()
+print(">>> Creating graph: places")
 
 ## Add Italy as country
 # rdf:type
@@ -213,6 +214,7 @@ for place in ['Regioni', 'Province', 'Comuni']:
             name = row['NOME_Regione']
             prefix_id = lifo_id.Region
             prefix_onto = lifo.Region
+            isAdministrationOf = lifo_id.Country + '/' + 'italy'
         elif place == 'Province':
             SHORT = 'PRO'
             LONG = 'La provincia di'
@@ -220,6 +222,7 @@ for place in ['Regioni', 'Province', 'Comuni']:
             name = row['NOME_Provincia']
             prefix_id = lifo_id.Province
             prefix_onto = lifo.Province
+            isAdministrationOf = lifo_id.Region + '/' + row['NOME_Regione'].replace(' ', '-').lower()
         else:
             SHORT = 'COM'
             LONG = 'Il comune di'
@@ -227,6 +230,7 @@ for place in ['Regioni', 'Province', 'Comuni']:
             name = row['NOME_Comune']
             prefix_id = lifo_id.City
             prefix_onto = lifo.City
+            isAdministrationOf = lifo_id.Province + '/' + row['NOME_Provincia'].replace(' ', '-').lower()
         name = name.replace(' ', '-').lower()
 
         # rdf:type
@@ -235,13 +239,45 @@ for place in ['Regioni', 'Province', 'Comuni']:
             RDF.type,
             URIRef(prefix_onto)
         ))
-        
         # rdfs:label
         places_graph.add((
             URIRef(prefix_id + "/" + name),
             RDFS.label,
             Literal(f"{name}")
         ))
+        # lifo:isAdministrationOf
+        places_graph.add((
+            URIRef(prefix_id + "/" + name),
+            lifo.isAdministrationOf,
+            URIRef(isAdministrationOf)
+        ))
+
+
+adm_query = """
+SELECT DISTINCT ?a ?b
+WHERE { ?a lifo:isAdministrationOf ?b }
+"""
+
+places_graph.bind("lifo", lifo)
+adm_qres = places_graph.query(adm_query)
+for row in adm_qres:
+    # lifo:hasAdministrationOf
+    places_graph.add((
+        URIRef(row[1]),
+        lifo.hasAdministrationOf,
+        URIRef(row[0])
+    ))
+
+## Ontology alignement for places
+f = open('alignement/limes_places.txt')
+for row in f.readlines():
+    source, target, score = row.split('\t')
+    # owl:sameAs
+    places_graph.add((
+        URIRef(source[1:-1]), # remove < and >
+        OWL.sameAs,
+        URIRef(target[1:-1]) # remove < and >
+    ))
 
 ###############################################################################
 ####################### INDICATOR_COLLECTION GRAPH ############################
@@ -252,9 +288,9 @@ indicatorCollection_graph = Graph()
 
 print(">>> Creating graph: indicatorCollection")
 for year in ['2012', '2015']:
-    for place in ['Regioni', 'Nazionale']:
-    # for place in ['Regioni', 'Province']:
-    # for place in ['Regioni', 'Province', 'Comuni', 'Nazionale']: # -> CAREFUL: 'Comuni' files are VERY big!
+    # for place in ['Nazionale', 'Regioni']:
+    # for place in ['Nazionale', 'Regioni', 'Province']:
+    for place in ['Nazionale', 'Regioni', 'Province', 'Comuni']: # -> CAREFUL: 'Comuni' files are VERY big!
 
         # Load Data
         print(f'>>>>>> Working to {place} {year}')
@@ -334,7 +370,7 @@ for year in ['2012', '2015']:
                 # Avoid 'C7' indicator:
                 # - Regioni -> C7_RM_1956;C7_RM_1989;C7_RM_1998;C7_RM_2008;C7_RM_2013
                 # - Comuni e Province -> Does not exist
-                if metric == 'C7': continue;
+                if metric == 'C7': continue
 
                 ##################################
                 # PLACE-YEAR METRIC #
@@ -399,7 +435,6 @@ for year in ['2012', '2015']:
 # Merge graphs
 final_graph = protege_graph + places_graph + metrics_graph + indicatorCollection_graph
 final_graph.bind("lifo", lifo)
-# final_graph.bind("lifo-id", lifo_id)
 final_graph.bind("rdf", RDF)
 final_graph.bind("rdfs", RDFS)
 final_graph.bind("dc", DC)

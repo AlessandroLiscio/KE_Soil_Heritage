@@ -46,6 +46,15 @@
     
 
 
+    <!-- https://w3id.org/stlab/ke/lifo/onto/hasAdministrationOf -->
+
+    <owl:ObjectProperty rdf:about="https://w3id.org/stlab/ke/lifo/onto/hasAdministrationOf">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <owl:inverseOf rdf:resource="https://w3id.org/stlab/ke/lifo/onto/hasAdministrationOf"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- https://w3id.org/stlab/ke/lifo/onto/hasLocation -->
 
     <owl:ObjectProperty rdf:about="https://w3id.org/stlab/ke/lifo/onto/hasLocation">
@@ -70,6 +79,14 @@
         <owl:inverseOf rdf:resource="https://w3id.org/stlab/ke/lifo/onto/isValueOf"/>
         <rdfs:domain rdf:resource="https://w3id.org/stlab/ke/lifo/onto/Indicator"/>
         <rdfs:range rdf:resource="https://w3id.org/stlab/ke/lifo/onto/IndicatorValue"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://w3id.org/stlab/ke/lifo/onto/isAdministrationOf -->
+
+    <owl:ObjectProperty rdf:about="https://w3id.org/stlab/ke/lifo/onto/isAdministrationOf">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
     </owl:ObjectProperty>
     
 

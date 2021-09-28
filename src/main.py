@@ -185,13 +185,13 @@ print(">>> Creating graph: places")
 ## Add Italy as country
 # rdf:type
 places_graph.add((
-    URIRef(lifo_id.Country + "/italy"),
+    URIRef(lifo_id.Country + "/italia"),
     RDF.type,
     URIRef(lifo.Country)
 ))
 # rdfs:label
 places_graph.add((
-    URIRef(lifo_id.Country + "/italy"),
+    URIRef(lifo_id.Country + "/italia"),
     RDFS.label,
     Literal("Italia")
 ))
@@ -214,7 +214,7 @@ for place in ['Regioni', 'Province', 'Comuni']:
             name = row['NOME_Regione']
             prefix_id = lifo_id.Region
             prefix_onto = lifo.Region
-            isAdministrationOf = lifo_id.Country + '/' + 'italy'
+            isAdministrationOf = lifo_id.Country + '/' + 'italia'
         elif place == 'Province':
             SHORT = 'PRO'
             LONG = 'La provincia di'

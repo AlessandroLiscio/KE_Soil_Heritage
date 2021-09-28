@@ -5,7 +5,7 @@ a knowledge graph following standards given by design patterns.
 This projects provides the following facilities for enhancing user experience: 
  - Virtuoso as SPARQL enpoint;
  - LODE for visualising ontologies as HTML;
- - LodView for browsing ontology entities as well as controlloed vocabularies entities.
+ - LodView for browsing ontology entities as well as controlled vocabularies entities.
  - LodLive and WebVOWL for visualising ontologies with the effectiveness of data graph representation;
 
 ### With Docker

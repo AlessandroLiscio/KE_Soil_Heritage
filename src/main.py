@@ -289,8 +289,8 @@ indicatorCollection_graph = Graph()
 print(">>> Creating graph: indicatorCollection")
 for year in ['2012', '2015']:
     # for place in ['Nazionale', 'Regioni']:
-    # for place in ['Nazionale', 'Regioni', 'Province']:
-    for place in ['Nazionale', 'Regioni', 'Province', 'Comuni']: # -> CAREFUL: 'Comuni' files are VERY big!
+    for place in ['Nazionale', 'Regioni', 'Province']:
+    # for place in ['Nazionale', 'Regioni', 'Province', 'Comuni']: # -> CAREFUL: 'Comuni' files are VERY big!
 
         # Load Data
         print(f'>>>>>> Working to {place} {year}')

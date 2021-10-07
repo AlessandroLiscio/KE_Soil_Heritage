@@ -413,7 +413,7 @@ for year in ['2012', '2015']:
                 indicatorCollection_graph.add((
                     URIRef(lifo_id.Indicator + indicator_entity),
                     RDF.value,
-                    Literal(row[metric])
+                    Literal(str(row[metric]).replace(',','.'))
                     ))
                 # lifo:hasLocation
                 indicatorCollection_graph.add((
